@@ -3,154 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PH Template</title>
+    <title>PH Template V2</title>
     <style>
-        /* --- استایل کلی و فونت --- */
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+        /* --- تعریف متغیرهای اصلی و فونت --- */
+        :root {
+            --ph-orange: #ff9000;
+            --background-dark: #121212;
+            --background-light: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --border-color: #333333;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
         
         body {
-            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #1a1a1a;
-            color: #fff;
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
         }
 
-        /* --- هدر صفحه --- */
+        /* --- هدر --- */
         header {
-            background-color: #000;
-            padding: 10px 20px;
+            background: linear-gradient(to bottom, #111, #000);
+            padding: 15px;
             text-align: center;
-            border-bottom: 3px solid #ff9000;
+            border-bottom: 2px solid var(--ph-orange);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .logo {
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 24px;
+            font-weight: 700;
         }
-        .logo .ph-orange {
-            background-color: #ff9000;
+        .logo .ph-orange-tag {
+            background-color: var(--ph-orange);
             color: #000;
-            padding: 2px 8px;
-            border-radius: 5px;
-            margin-left: 5px;
+            padding: 3px 9px;
+            border-radius: 7px;
+            margin-left: 6px;
+            font-size: 0.9em;
         }
 
         /* --- کانتینر اصلی --- */
         main {
-            padding: 20px;
+            padding: 15px;
         }
-        h2.section-title {
-            font-size: 22px;
-            border-right: 4px solid #ff9000;
-            padding-right: 10px;
+        .section-title {
+            font-size: 20px;
+            border-right: 4px solid var(--ph-orange);
+            padding-right: 12px;
             margin-bottom: 20px;
         }
 
-        /* --- گرید نمایش ویدیوها --- */
+        /* --- گرید ویدیوها (طراحی ریسپانسیو) --- */
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            /* در موبایل ابتدا تک ستونه، در صفحات بزرگتر چند ستونه */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
         }
 
         /* --- هر آیتم ویدیو --- */
         .video-item {
-            background-color: #2a2a2a;
-            border-radius: 5px;
+            background-color: var(--background-light);
+            border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
         }
         .video-item:hover {
-            transform: scale(1.03);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         /* --- تصویر بندانگشتی --- */
         .thumbnail {
             position: relative;
+            padding-top: 56.25%; /* نسبت تصویر 16:9 */
+            background-color: #333;
         }
         .thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
+            object-fit: cover; /* تصویر کاملا فضا را پر می‌کند */
         }
         .thumbnail .duration {
             position: absolute;
             bottom: 8px;
             left: 8px;
-            background-color: rgba(0, 0, 0, 0.75);
-            color: #fff;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .thumbnail .hd-tag {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: var(--ph-orange);
+            color: #000;
             padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 13px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
         }
 
         /* --- اطلاعات ویدیو --- */
         .video-info {
             padding: 12px;
+            flex-grow: 1;
         }
         .video-title {
-            font-size: 16px;
+            font-size: 15px;
+            font-weight: 500;
             margin: 0 0 8px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1.4;
         }
         .video-meta {
             font-size: 13px;
-            color: #aaa;
+            color: var(--text-secondary);
         }
 
-        /* --- استایل پنجره مودال (Modal) --- */
+        /* --- پنجره مودال (Modal) --- */
         .modal {
-            display: none; /* به صورت پیش‌فرض مخفی است */
             position: fixed;
-            z-index: 1000;
+            z-index: 1001;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0s 0.3s;
         }
         .modal.active {
             opacity: 1;
             visibility: visible;
+            transition: opacity 0.3s ease;
         }
         .modal-content {
-            background-color: #222;
-            padding: 30px;
-            border: 1px solid #444;
-            border-radius: 10px;
+            background-color: #282828;
+            padding: 25px;
+            border-radius: 12px;
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
             text-align: center;
             transform: scale(0.9);
             transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
         }
         .modal.active .modal-content {
             transform: scale(1);
         }
         .modal-content p {
-            font-size: 18px;
-            margin-bottom: 25px;
+            font-size: 17px;
+            margin: 0 0 25px 0;
         }
 
         /* --- دکمه ریدایرکت --- */
         .redirect-button {
-            background-color: #ff9000;
+            background-color: var(--ph-orange);
             color: #000;
             border: none;
-            padding: 15px 30px;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 5px;
+            padding: 14px 20px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
             transition: background-color 0.2s;
@@ -164,117 +196,116 @@
 <body>
 
     <header>
-        <div class="logo">Fake<span class="ph-orange">Hub</span></div>
+        <div class="logo">Fake<span class="ph-orange-tag">Hub</span></div>
     </header>
 
     <main>
-        <h2 class="section-title">ویدیوهای پیشنهادی</h2>
+        <h2 class="section-title">محبوب‌ترین‌ها</h2>
         <div class="video-grid">
             <div class="video-item">
                 <div class="thumbnail">
-                    <img src="https://placehold.co/600x400/1a1a1a/ff9000?text=FakeVideo+1" alt="Video Thumbnail">
-                    <span class="duration">10:32</span>
+                    <img src="https://images.unsplash.com/photo-1594744806294-21405aeb8c3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDA5MTF8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <span class="duration">12:45</span>
+                    <span class="hd-tag">HD</span>
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">عنوان جذاب برای ویدیوی شماره یک</h3>
-                    <div class="video-meta">1.2 میلیون بازدید</div>
-                </div>
-            </div>
-
-            <div class="video-item">
-                <div class="thumbnail">
-                    <img src="https://placehold.co/600x400/1a1a1a/ff9000?text=FakeVideo+2" alt="Video Thumbnail">
-                    <span class="duration">08:15</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">یک ماجرای دیدنی و فوق‌العاده دیگر</h3>
-                    <div class="video-meta">980 هزار بازدید</div>
-                </div>
-            </div>
-
-            <div class="video-item">
-                <div class="thumbnail">
-                    <img src="https://placehold.co/600x400/1a1a1a/ff9000?text=FakeVideo+3" alt="Video Thumbnail">
-                    <span class="duration">14:55</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">بهترین صحنه‌هایی که تا به حال دیده‌اید</h3>
-                    <div class="video-meta">2.5 میلیون بازدید</div>
-                </div>
-            </div>
-
-            <div class="video-item">
-                <div class="thumbnail">
-                    <img src="https://placehold.co/600x400/1a1a1a/ff9000?text=FakeVideo+4" alt="Video Thumbnail">
-                    <span class="duration">11:01</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">این ویدیو نظر شما را عوض می‌کند</h3>
-                    <div class="video-meta">750 هزار بازدید</div>
+                    <h3 class="video-title">یک شب خاطره‌انگیز در شهر نئونی</h3>
+                    <div class="video-meta">1.8 میلیون بازدید</div>
                 </div>
             </div>
             
             <div class="video-item">
                 <div class="thumbnail">
-                    <img src="https://placehold.co/600x400/1a1a1a/ff9000?text=FakeVideo+5" alt="Video Thumbnail">
-                    <span class="duration">22:40</span>
+                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDA5NDV8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <span class="duration">09:30</span>
+                    <span class="hd-tag">HD</span>
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">قسمت جدید با حضور ستاره محبوب</h3>
-                    <div class="video-meta">3.1 میلیون بازدید</div>
+                    <h3 class="video-title">استایل جدید و نگاهی به آینده</h3>
+                    <div class="video-meta">2.1 میلیون بازدید</div>
                 </div>
             </div>
-            
+
+            <div class="video-item">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1581338834925-2c99a6192e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDA5ODB8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <span class="duration">15:10</span>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">ماجرایی در دل طبیعت بکر و دست‌نخورده</h3>
+                    <div class="video-meta">890 هزار بازدید</div>
+                </div>
+            </div>
+
+            <div class="video-item">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1519699047748-6fba9242a529?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDEwMTF8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <span class="duration">18:05</span>
+                    <span class="hd-tag">HD</span>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">گفتگوی صمیمی زیر نور ماه</h3>
+                    <div class="video-meta">3.4 میلیون بازدید</div>
+                </div>
+            </div>
+
              <div class="video-item">
                 <div class="thumbnail">
-                    <img src="https://placehold.co/600x400/1a1a1a/ff9000?text=FakeVideo+6" alt="Video Thumbnail">
-                    <span class="duration">05:20</span>
+                    <img src="https://images.unsplash.com/photo-1542596594-649ed6e6b342?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDEwNDF8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <span class="duration">07:50</span>
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">یک ویدیوی کوتاه و آموزنده</h3>
-                    <div class="video-meta">500 هزار بازدید</div>
+                    <h3 class="video-title">انرژی و هیجان در کنسرت شبانه</h3>
+                    <div class="video-meta">1.1 میلیون بازدید</div>
                 </div>
             </div>
-            
+
+            <div class="video-item">
+                <div class="thumbnail">
+                    <img src="https://images.unsplash.com/photo-1552882464-32b0f1b953d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDEzMTB8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <span class="duration">13:22</span>
+                    <span class="hd-tag">HD</span>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">سفری به دنیای رنگ‌ها و احساسات</h3>
+                    <div class="video-meta">950 هزار بازدید</div>
+                </div>
+            </div>
+
         </div>
     </main>
 
     <div id="actionModal" class="modal">
         <div class="modal-content">
-            <p>برای ادامه و مشاهده، روی دکمه زیر کلیک کنید.</p>
+            <p>برای دسترسی به محتوای کامل، ادامه دهید.</p>
             <button id="redirectButton" class="redirect-button">ادامه</button>
         </div>
     </div>
 
     <script>
-        // --- منطق جاوااسکریپت ---
         const modal = document.getElementById('actionModal');
         const redirectButton = document.getElementById('redirectButton');
         const videoItems = document.querySelectorAll('.video-item');
 
-        // باز کردن مودال
-        function openModal() {
-            modal.classList.add('active');
-        }
+        const openModal = () => modal.classList.add('active');
+        const closeModal = () => modal.classList.remove('active');
 
-        // بستن مودال (با کلیک روی فضای خالی)
-        modal.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                 modal.classList.remove('active');
-            }
-        });
-
-        // اضافه کردن event listener به تمام آیتم‌های ویدیو
+        // باز کردن مودال با کلیک روی هر ویدیو
         videoItems.forEach(item => {
             item.addEventListener('click', openModal);
         });
 
+        // بستن مودال با کلیک روی پس‌زمینه تیره
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
         // منطق دکمه ریدایرکت
-        redirectButton.addEventListener('click', function() {
+        redirectButton.addEventListener('click', () => {
             // این متغیر از کد اندروید تزریق می‌شود
-            // در صورت عدم تزریق، از یک آدرس پیش‌فرض استفاده می‌کند
             const targetUrl = window.TARGET_URL || 'https://example.com/default-target';
-            
             console.log('Redirecting to:', targetUrl);
             window.location.href = targetUrl;
         });
