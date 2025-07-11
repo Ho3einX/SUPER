@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Template (Local)</title>
+    <title>Dynamic App Template</title>
     <style>
         :root {
             --ph-orange: #ff9000;
@@ -14,168 +14,256 @@
             --border-color: #282828;
         }
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--background-dark); color: var(--text-primary); }
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .container { max-width: 1600px; margin: 0 auto; padding: 0 15px; }
+        
+        /* --- Header & Nav Styles (from previous version) --- */
         header { background-color: var(--background-light); padding: 10px 0; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 22px; font-weight: 700; }
+        .logo { font-size: 22px; font-weight: 700; cursor: pointer; }
         .logo .ph-orange-tag { background-color: var(--ph-orange); color: #000; padding: 2px 8px; border-radius: 7px; margin-left: 5px; }
         .search-bar { flex-grow: 1; margin: 0 20px; max-width: 500px; }
         .search-bar input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border-color); background-color: var(--background-dark); color: var(--text-primary); font-size: 14px; }
         .profile-icon img { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
         nav { background-color: var(--background-light); padding: 10px 0; border-bottom: 1px solid var(--border-color); overflow-x: auto; white-space: nowrap; }
         .categories { list-style: none; display: flex; gap: 10px; }
-        .categories li a { color: var(--text-secondary); text-decoration: none; padding: 8px 15px; border-radius: 18px; font-size: 14px; font-weight: 500; transition: background-color 0.2s, color 0.2s; display: block; }
-        .categories li a:hover { background-color: var(--border-color); color: var(--text-primary); }
+        .categories li a { color: var(--text-secondary); text-decoration: none; padding: 8px 15px; border-radius: 18px; font-size: 14px; font-weight: 500; transition: background-color 0.2s, color 0.2s; display: block; cursor: pointer;}
         .categories li a.active { background-color: var(--ph-orange); color: #000; }
-        main { padding: 20px 0; }
-        .section-title { font-size: 22px; margin-bottom: 20px; }
+        
+        /* --- Video Grid (Home Page) --- */
+        .section-title { font-size: 22px; margin: 20px 0; }
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .video-item { background-color: var(--background-light); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .video-item { background-color: var(--background-light); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease; }
         .video-item.hidden { display: none; }
-        .video-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); }
+        .video-item:hover { transform: translateY(-5px); }
         .thumbnail { position: relative; padding-top: 56.25%; }
         .thumbnail img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-        .thumbnail .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background-color: rgba(0, 0, 0, 0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.2s; }
-        .video-item:hover .play-icon { opacity: 1; }
-        .play-icon svg { width: 24px; height: 24px; fill: white; }
         .thumbnail .duration { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.8); padding: 3px 7px; border-radius: 4px; font-size: 12px; }
         .video-info { padding: 12px; }
-        .video-title { font-size: 16px; font-weight: 500; margin: 0 0 8px 0; }
+        .video-title { font-size: 16px; margin: 0 0 8px 0; }
         .video-meta { font-size: 13px; color: var(--text-secondary); }
+
+        /* --- Details Page Styles --- */
+        .details-header { display: flex; align-items: center; padding: 10px 0; }
+        .back-button { background: none; border: none; color: white; cursor: pointer; padding: 10px; }
+        .back-button svg { width: 24px; height: 24px; fill: white; }
+        .player-wrapper { position: relative; padding-top: 56.25%; background-color: #000; }
+        .player-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); cursor: pointer; }
+        .play-overlay svg { width: 60px; height: 60px; fill: rgba(255,255,255,0.8); }
+        .details-content { padding: 20px 15px; }
+        .details-content h1 { font-size: 24px; margin-bottom: 10px; }
+        .details-actions { display: flex; gap: 10px; margin: 20px 0; overflow-x: auto; padding-bottom: 10px; }
+        .action-button { background: var(--background-light); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 15px; border-radius: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; }
+        .action-button svg { width: 20px; height: 20px; fill: var(--text-secondary); }
+        .description { background: var(--background-light); padding: 15px; border-radius: 8px; line-height: 1.7; }
+
+        /* --- Modal & Loading Spinner --- */
         .modal { position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s 0.3s; }
         .modal.active { opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
-        .modal-content { background-color: #282828; padding: 20px; border-radius: 12px; width: 90%; max-width: 480px; text-align: center; transform: scale(0.9); transition: transform 0.3s ease; }
-        .modal.active .modal-content { transform: scale(1); }
-        .close-button { position: absolute; top: 15px; left: 15px; font-size: 28px; color: var(--text-secondary); cursor: pointer; line-height: 1; }
-        .modal-content h3 { font-size: 20px; margin-bottom: 15px; }
-        .modal-content p { font-size: 16px; margin-bottom: 20px; color: var(--text-secondary); }
-        .modal-actors { margin-bottom: 25px; }
-        .modal-actors h4 { font-size: 14px; color: var(--ph-orange); margin-bottom: 10px; text-align: right; }
-        .actors-list { list-style: none; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .actors-list li { color: var(--text-secondary); font-size: 14px; background: var(--border-color); padding: 5px 12px; border-radius: 15px; }
-        .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; }
-        @media (max-width: 600px) { .search-bar { display: none; } }
+        .modal-content { background-color: #282828; padding: 20px; border-radius: 12px; width: 90%; max-width: 480px; text-align: center; }
+        .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; min-height: 53px; display: flex; justify-content: center; align-items: center; }
+        .spinner {
+            width: 25px;
+            height: 25px;
+            border: 3px solid rgba(0, 0, 0, 0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="container header-content">
-            <div class="logo">Site<span class="ph-orange-tag">Hub</span></div>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="جستجو در ویدیوها...">
+    <div id="home-page" class="page active">
+        <header>
+            <div class="container header-content">
+                <div class="logo">Site<span class="ph-orange-tag">Hub</span></div>
+                <div class="search-bar"><input type="text" id="searchInput" placeholder="جستجو..."></div>
+                <div class="profile-icon"><img src="https://i.pravatar.cc/150" alt="Profile"></div>
             </div>
-            <div class="profile-icon">
-                <img src="./images/profile.jpg" alt="Profile">
+        </header>
+        <nav>
+            <div class="container">
+                <ul class="categories">
+                    <li><a class="active" data-category="all">همه</a></li>
+                    <li><a data-category="irani">ایرانی</a></li>
+                    <li><a data-category="khareji">خارجی</a></li>
+                </ul>
             </div>
-        </div>
-    </header>
+        </nav>
+        <main class="container">
+            <h2 class="section-title">پیشنهادهای ویژه</h2>
+            <div class="video-grid" id="videoGrid">
+                </div>
+        </main>
+    </div>
 
-    <nav>
-        <div class="container">
-            <ul class="categories">
-                <li><a href="#" class="active" data-category="all">همه</a></li>
-                <li><a href="#" data-category="irani">ایرانی</a></li>
-                <li><a href="#" data-category="khareji">خارجی</a></li>
-                <li><a href="#" data-category="amoozeshi">آموزشی</a></li>
-                <li><a href="#" data-category="varzeshi">ورزشی</a></li>
-            </ul>
+    <div id="details-page" class="page">
         </div>
-    </nav>
-
-    <main class="container">
-        <h2 class="section-title">پیشنهادهای ویژه</h2>
-        <div class="video-grid">
-            <div class="video-item" data-category="irani" data-actors="گلشیفته فراهانی, شهاب حسینی"><div class="thumbnail"><img src="./images/thumb1.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">12:45</span></div><div class="video-info"><h3 class="video-title">یک شب خاطره‌انگیز در شهر</h3><div class="video-meta">1.8 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="khareji" data-actors="Zendaya, Tom Holland"><div class="thumbnail"><img src="./images/thumb2.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">09:30</span></div><div class="video-info"><h3 class="video-title">استایل جدید و نگاهی به آینده</h3><div class="video-meta">2.1 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="amoozeshi" data-actors="دکتر حسابی"><div class="thumbnail"><img src="./images/thumb3.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">15:10</span></div><div class="video-info"><h3 class="video-title">آموزش فیزیک کوانتوم</h3><div class="video-meta">890 هزار بازدید</div></div></div>
-            <div class="video-item" data-category="varzeshi" data-actors="لیونل مسی, کریستیانو رونالدو"><div class="thumbnail"><img src="./images/thumb4.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">18:05</span></div><div class="video-info"><h3 class="video-title">برترین لحظات ال‌کلاسیکو</h3><div class="video-meta">3.4 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="khareji" data-actors="Ana de Armas"><div class="thumbnail"><img src="./images/thumb5.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">07:50</span></div><div class="video-info"><h3 class="video-title">انرژی و هیجان در کنسرت شبانه</h3><div class="video-meta">1.1 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="irani" data-actors="نوید محمدزاده"><div class="thumbnail"><img src="./images/thumb6.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">13:22</span></div><div class="video-info"><h3 class="video-title">سفری به دنیای رنگ‌ها و احساسات</h3><div class="video-meta">950 هزار بازدید</div></div></div>
-        </div>
-    </main>
 
     <div id="actionModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h3>دسترسی به محتوا</h3>
-            <p>برای دسترسی به محتوای کامل این ویدیو، روی دکمه ادامه کلیک کنید.</p>
-            <div class="modal-actors">
-                <h4>بازیگران:</h4>
-                <ul class="actors-list" id="modalActorsList"></ul>
-            </div>
+            <h3 style="margin-bottom: 20px;">دسترسی به لینک</h3>
+            <p>برای دسترسی به لینک دانلود یا محتوای کامل، روی دکمه ادامه کلیک کنید.</p>
             <button id="redirectButton" class="redirect-button">ادامه</button>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('actionModal');
-            const closeModalBtn = document.querySelector('.close-button');
-            const redirectButton = document.getElementById('redirectButton');
-            const videoItems = document.querySelectorAll('.video-item');
-            const categoryLinks = document.querySelectorAll('.categories a');
-            const searchInput = document.getElementById('searchInput');
-            const modalActorsList = document.getElementById('modalActorsList');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DATA ---
+        const videoData = [
+            { id: 1, title: 'یک شب خاطره‌انگیز در شهر', category: 'irani', actors: 'گلشیفته فراهانی, شهاب حسینی', views: '1.8M', duration: '12:45', thumbnail: 'https://images.unsplash.com/photo-1594744806294-21405aeb8c3f?w=600', description: 'یک داستان درام و اجتماعی که در شب‌های پر رمز و راز تهران اتفاق می‌افتد و زندگی چند خانواده را به هم گره می‌زند.' },
+            { id: 2, title: 'استایل جدید و نگاهی به آینده', category: 'khareji', actors: 'Zendaya, Tom Holland', views: '2.1M', duration: '09:30', thumbnail: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600', description: 'نگاهی به آخرین ترندهای مد و فشن و تاثیری که تکنولوژی بر روی آینده طراحی لباس خواهد گذاشت.' },
+            { id: 3, title: 'برترین لحظات ال‌کلاسیکو', category: 'varzeshi', actors: 'لیونل مسی, کریستیانو رونالدو', views: '3.4M', duration: '18:05', thumbnail: 'https://images.unsplash.com/photo-1519699047748-6fba9242a529?w=600', description: 'مروری بر هیجان‌انگیزترین و به‌یادماندنی‌ترین لحظات رقابت تاریخی دو غول فوتبال جهان، رئال مادرید و بارسلونا.' },
+            { id: 4, title: 'سفری به دنیای رنگ‌ها و احساسات', category: 'irani', actors: 'نوید محمدزاده, پریناز ایزدیار', views: '950K', duration: '13:22', thumbnail: 'https://images.unsplash.com/photo-1552882464-32b0f1b953d9?w=600', description: 'یک فیلم هنری که با استفاده از رنگ‌ها و موسیقی، داستانی عمیق و احساسی را روایت می‌کند.' }
+        ];
 
-            const openModal = (actors) => {
-                modalActorsList.innerHTML = '';
-                actors.forEach(actorName => {
-                    const li = document.createElement('li');
-                    li.textContent = actorName.trim();
-                    modalActorsList.appendChild(li);
-                });
-                modal.classList.add('active');
-            };
+        // --- ELEMENTS ---
+        const homePage = document.getElementById('home-page');
+        const detailsPage = document.getElementById('details-page');
+        const videoGrid = document.getElementById('videoGrid');
+        const modal = document.getElementById('actionModal');
+        const redirectButton = document.getElementById('redirectButton');
+        const searchInput = document.getElementById('searchInput');
+        const categoryLinks = document.querySelectorAll('.categories a');
+        const logo = document.querySelector('.logo');
 
-            const closeModal = () => modal.classList.remove('active');
+        // --- ROUTING ---
+        function navigateTo(pageId, data = null) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (pageId === 'details-page' && data) {
+                renderDetailsPage(data);
+            }
+            targetPage.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        
+        logo.addEventListener('click', () => navigateTo('home-page'));
 
-            videoItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const actorsData = item.getAttribute('data-actors') || '';
-                    const actorsArray = actorsData.split(',');
-                    openModal(actorsArray);
-                });
+
+        // --- RENDER FUNCTIONS ---
+        function renderHomePage(filter = 'all', searchTerm = '') {
+            videoGrid.innerHTML = '';
+            const filteredData = videoData.filter(video => {
+                const matchesCategory = (filter === 'all' || video.category === filter);
+                const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
             });
 
-            closeModalBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) closeModal();
+            filteredData.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `
+                    <div class="thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <span class="duration">${video.duration}</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-meta">${video.views} بازدید</div>
+                    </div>
+                `;
+                videoItem.addEventListener('click', () => navigateTo('details-page', video));
+                videoGrid.appendChild(videoItem);
             });
+        }
 
-            redirectButton.addEventListener('click', () => {
-                let targetUrl = 'https://example.com/fallback-error';
-                if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
-                    targetUrl = window.Android.getTargetUrl();
-                } else {
-                    console.log("Android interface not found. Using fallback URL.");
-                }
-                window.location.href = targetUrl;
-            });
+        function renderDetailsPage(video) {
+            detailsPage.innerHTML = `
+                <header class="details-header">
+                    <button class="back-button"><svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg></button>
+                </header>
+                <div class="player-wrapper">
+                    <img src="${video.thumbnail}" alt="${video.title}">
+                    <div class="play-overlay" data-action="play">
+                        <svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+                    </div>
+                </div>
+                <div class="details-content">
+                    <h1>${video.title}</h1>
+                    <div class="video-meta">${video.views} بازدید</div>
+                    <div class="details-actions">
+                        <button class="action-button" data-action="like"><svg viewBox="0 0 24 24"><path d="M23,10C23,8.89 22.1,8 21,8H14.68L15.64,3.43L15.67,3.24C15.67,2.96 15.55,2.71 15.38,2.53L14.37,1.5L7.42,8.44C7.15,8.71 7,9.07 7,9.5V19C7,20.1 7.9,21 9,21H18C18.83,21 19.54,20.5 19.84,19.78L22.86,12.73C22.95,12.5 23,12.26 23,12V10M1,21H5V9H1V21Z" /></svg>لایک</button>
+                        <button class="action-button" data-action="download"><svg viewBox="0 0 24 24"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>دانلود</button>
+                        <button class="action-button" data-action="share"><svg viewBox="0 0 24 24"><path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L16.04,7.15C16.56,7.62 17.24,7.92 18,7.92C19.66,7.92 21,6.58 21,4.92C21,3.26 19.66,1.92 18,1.92C16.34,1.92 15,3.26 15,4.92C15,5.16 15.04,5.39 15.09,5.62L7.96,9.77C7.44,9.3 6.76,9 6,9C4.34,9 3,10.34 3,12C3,13.66 4.34,15 6,15C6.76,15 7.44,14.7 7.96,14.23L15.09,18.38C15.04,18.61 15,18.84 15,19.08C15,20.74 16.34,22.08 18,22.08C19.66,22.08 21,20.74 21,19.08C21,17.42 19.66,16.08 18,16.08Z" /></svg>اشتراک‌گذاری</button>
+                    </div>
+                    <div class="description">${video.description}</div>
+                </div>
+            `;
+            detailsPage.querySelector('.back-button').addEventListener('click', () => navigateTo('home-page'));
+            detailsPage.querySelectorAll('[data-action]').forEach(btn => btn.addEventListener('click', openModal));
+        }
 
-            categoryLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const selectedCategory = link.getAttribute('data-category');
-                    categoryLinks.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-                    videoItems.forEach(item => {
-                        item.classList.toggle('hidden', !(selectedCategory === 'all' || item.getAttribute('data-category') === selectedCategory));
-                    });
-                });
-            });
+        // --- MODAL & REDIRECT ---
+        function openModal() {
+            modal.classList.add('active');
+        }
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                videoItems.forEach(item => {
-                    const title = item.querySelector('.video-title').textContent.toLowerCase();
-                    item.classList.toggle('hidden', !title.includes(searchTerm));
-                });
+        redirectButton.addEventListener('click', () => {
+            let targetUrl = 'https://example.com/fallback-error';
+            if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
+                targetUrl = window.Android.getTargetUrl();
+            } else {
+                console.log("Android interface not found. Using fallback.");
+            }
+            
+            // Show spinner
+            redirectButton.innerHTML = '<div class="spinner"></div>';
+            redirectButton.disabled = true;
+
+            console.log('Redirecting to:', targetUrl);
+            setTimeout(() => { window.location.href = targetUrl; }, 200); // Small delay to show spinner
+        });
+
+        // --- FILTERS & SEARCH ---
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                categoryLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                renderHomePage(link.dataset.category, searchInput.value);
             });
         });
-    </script>
 
+        searchInput.addEventListener('input', e => {
+            const activeCategory = document.querySelector('.categories a.active').dataset.category;
+            renderHomePage(activeCategory, e.target.value);
+        });
+
+        // --- INITIAL RENDER ---
+        renderHomePage();
+    });
+    </script>
 </body>
 </html>
