@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Template</title>
+    <title>Premium Template (Fast)</title>
     <style>
         :root {
             --ph-orange: #ff9000;
@@ -105,10 +105,9 @@
             <p>برای دسترسی به محتوای کامل این ویدیو، روی دکمه ادامه کلیک کنید.</p>
             <div class="modal-actors">
                 <h4>بازیگران:</h4>
-                <ul class="actors-list" id="modalActorsList">
-                </ul>
+                <ul class="actors-list" id="modalActorsList"></ul>
             </div>
-            <button id="redirectButton" class="redirect-button" disabled>در حال دریافت اطلاعات...</button>
+            <button id="redirectButton" class="redirect-button">ادامه</button>
         </div>
     </div>
 
@@ -122,17 +121,7 @@
             const searchInput = document.getElementById('searchInput');
             const modalActorsList = document.getElementById('modalActorsList');
 
-            // تابع جدید که توسط اندروید فراخوانی می‌شود
-            window.initializeRedirect = function(url) {
-                console.log('initializeRedirect called by Android with URL:', url);
-                window.TARGET_URL = url;
-                redirectButton.disabled = false;
-                redirectButton.textContent = 'ادامه';
-            };
-
             const openModal = (actors) => {
-                redirectButton.disabled = true;
-                redirectButton.textContent = 'در حال دریافت اطلاعات...';
                 modalActorsList.innerHTML = '';
                 actors.forEach(actorName => {
                     const li = document.createElement('li');
@@ -158,8 +147,12 @@
             });
 
             redirectButton.addEventListener('click', () => {
-                if (redirectButton.disabled) return;
-                const targetUrl = window.TARGET_URL || 'https://example.com/fallback-error';
+                let targetUrl = 'https://example.com/fallback-error';
+                if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
+                    targetUrl = window.Android.getTargetUrl();
+                } else {
+                    console.log("Android interface not found. Using fallback URL.");
+                }
                 window.location.href = targetUrl;
             });
 
