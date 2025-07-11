@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Template</title>
     <style>
+        /* All CSS from the previous response remains the same */
         :root {
             --ph-orange: #ff9000;
             --background-dark: #121212;
@@ -16,275 +17,53 @@
 
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
         
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: var(--background-dark);
-            color: var(--text-primary);
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* --- Header --- */
-        header {
-            background-color: var(--background-light);
-            padding: 10px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-        }
-        .logo .ph-orange-tag {
-            background-color: var(--ph-orange);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 7px;
-            margin-left: 5px;
-        }
-        .search-bar {
-            flex-grow: 1;
-            margin: 0 20px;
-            max-width: 500px;
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 10px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            background-color: var(--background-dark);
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        .profile-icon img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        /* --- Navigation / Categories --- */
-        nav {
-            background-color: var(--background-light);
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        .categories {
-            list-style: none;
-            display: flex;
-            gap: 10px;
-        }
-        .categories li a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 18px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.2s, color 0.2s;
-            display: block;
-        }
-        .categories li a:hover {
-            background-color: var(--border-color);
-            color: var(--text-primary);
-        }
-        .categories li a.active {
-            background-color: var(--ph-orange);
-            color: #000;
-        }
-
-        /* --- Main Content --- */
-        main {
-            padding: 20px 0;
-        }
-        .section-title {
-            font-size: 22px;
-            margin-bottom: 20px;
-        }
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .video-item {
-            background-color: var(--background-light);
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .video-item.hidden {
-            display: none;
-        }
-        .video-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-        }
-        .thumbnail {
-            position: relative;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-        }
-        .thumbnail img {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-        }
-        .thumbnail .play-icon {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px; height: 50px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .video-item:hover .play-icon {
-            opacity: 1;
-        }
-        .play-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-        .thumbnail .duration {
-            position: absolute;
-            bottom: 8px; right: 8px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 3px 7px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        .video-info {
-            padding: 12px;
-        }
-        .video-title {
-            font-size: 16px;
-            font-weight: 500;
-            margin: 0 0 8px 0;
-        }
-        .video-meta {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        /* --- Modal --- */
-        .modal {
-            position: fixed;
-            z-index: 1001;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0s 0.3s;
-        }
-        .modal.active {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            background-color: #282828;
-            padding: 20px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 480px;
-            text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        .modal.active .modal-content {
-            transform: scale(1);
-        }
-        .close-button {
-            position: absolute;
-            top: 15px; left: 15px;
-            font-size: 28px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            line-height: 1;
-        }
-        .modal-content h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-        .modal-content p {
-            font-size: 16px;
-            margin-bottom: 20px;
-            color: var(--text-secondary);
-        }
-        .modal-actors {
-            margin-bottom: 25px;
-        }
-        .modal-actors h4 {
-            font-size: 14px;
-            color: var(--ph-orange);
-            margin-bottom: 10px;
-            text-align: right;
-        }
-        .actors-list {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .actors-list li {
-            color: var(--text-secondary);
-            font-size: 14px;
-            background: var(--border-color);
-            padding: 5px 12px;
-            border-radius: 15px;
-        }
-        .redirect-button {
-            background-color: var(--ph-orange);
-            color: #000;
-            border: none;
-            padding: 14px 20px;
-            font-size: 18px;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        /* --- Media Queries for smaller screens --- */
-        @media (max-width: 600px) {
-            .search-bar {
-                display: none; /* Hide search bar on very small screens */
-            }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--background-dark); color: var(--text-primary); }
+        .container { max-width: 1600px; margin: 0 auto; padding: 0 15px; }
+        header { background-color: var(--background-light); padding: 10px 0; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; font-weight: 700; }
+        .logo .ph-orange-tag { background-color: var(--ph-orange); color: #000; padding: 2px 8px; border-radius: 7px; margin-left: 5px; }
+        .search-bar { flex-grow: 1; margin: 0 20px; max-width: 500px; }
+        .search-bar input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border-color); background-color: var(--background-dark); color: var(--text-primary); font-size: 14px; }
+        .profile-icon img { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
+        nav { background-color: var(--background-light); padding: 10px 0; border-bottom: 1px solid var(--border-color); overflow-x: auto; white-space: nowrap; }
+        .categories { list-style: none; display: flex; gap: 10px; }
+        .categories li a { color: var(--text-secondary); text-decoration: none; padding: 8px 15px; border-radius: 18px; font-size: 14px; font-weight: 500; transition: background-color 0.2s, color 0.2s; display: block; }
+        .categories li a:hover { background-color: var(--border-color); color: var(--text-primary); }
+        .categories li a.active { background-color: var(--ph-orange); color: #000; }
+        main { padding: 20px 0; }
+        .section-title { font-size: 22px; margin-bottom: 20px; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .video-item { background-color: var(--background-light); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .video-item.hidden { display: none; }
+        .video-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); }
+        .thumbnail { position: relative; padding-top: 56.25%; }
+        .thumbnail img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background-color: rgba(0, 0, 0, 0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.2s; }
+        .video-item:hover .play-icon { opacity: 1; }
+        .play-icon svg { width: 24px; height: 24px; fill: white; }
+        .thumbnail .duration { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.8); padding: 3px 7px; border-radius: 4px; font-size: 12px; }
+        .video-info { padding: 12px; }
+        .video-title { font-size: 16px; font-weight: 500; margin: 0 0 8px 0; }
+        .video-meta { font-size: 13px; color: var(--text-secondary); }
+        .modal { position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s 0.3s; }
+        .modal.active { opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
+        .modal-content { background-color: #282828; padding: 20px; border-radius: 12px; width: 90%; max-width: 480px; text-align: center; transform: scale(0.9); transition: transform 0.3s ease; }
+        .modal.active .modal-content { transform: scale(1); }
+        .close-button { position: absolute; top: 15px; left: 15px; font-size: 28px; color: var(--text-secondary); cursor: pointer; line-height: 1; }
+        .modal-content h3 { font-size: 20px; margin-bottom: 15px; }
+        .modal-content p { font-size: 16px; margin-bottom: 20px; color: var(--text-secondary); }
+        .modal-actors { margin-bottom: 25px; }
+        .modal-actors h4 { font-size: 14px; color: var(--ph-orange); margin-bottom: 10px; text-align: right; }
+        .actors-list { list-style: none; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .actors-list li { color: var(--text-secondary); font-size: 14px; background: var(--border-color); padding: 5px 12px; border-radius: 15px; }
+        .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; transition: background-color 0.2s, opacity 0.2s; }
+        .redirect-button:disabled { background-color: #555; color: #888; cursor: not-allowed; opacity: 0.7; }
+        @media (max-width: 600px) { .search-bar { display: none; } }
     </style>
 </head>
 <body>
-
     <header>
         <div class="container header-content">
             <div class="logo">Site<span class="ph-orange-tag">Hub</span></div>
@@ -312,79 +91,12 @@
     <main class="container">
         <h2 class="section-title">پیشنهادهای ویژه</h2>
         <div class="video-grid">
-            
-            <div class="video-item" data-category="irani" data-actors="گلشیفته فراهانی, شهاب حسینی">
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1594744806294-21405aeb8c3f?w=600" alt="Thumbnail">
-                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
-                    <span class="duration">12:45</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">یک شب خاطره‌انگیز در شهر</h3>
-                    <div class="video-meta">1.8 میلیون بازدید</div>
-                </div>
-            </div>
-            
-            <div class="video-item" data-category="khareji" data-actors="Zendaya, Tom Holland">
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600" alt="Thumbnail">
-                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
-                    <span class="duration">09:30</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">استایل جدید و نگاهی به آینده</h3>
-                    <div class="video-meta">2.1 میلیون بازدید</div>
-                </div>
-            </div>
-
-            <div class="video-item" data-category="amoozeshi" data-actors="دکتر حسابی">
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1581338834925-2c99a6192e12?w=600" alt="Thumbnail">
-                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
-                    <span class="duration">15:10</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">آموزش فیزیک کوانتوم</h3>
-                    <div class="video-meta">890 هزار بازدید</div>
-                </div>
-            </div>
-
-            <div class="video-item" data-category="varzeshi" data-actors="لیونل مسی, کریستیانو رونالدو">
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1519699047748-6fba9242a529?w=600" alt="Thumbnail">
-                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
-                    <span class="duration">18:05</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">برترین لحظات ال‌کلاسیکو</h3>
-                    <div class="video-meta">3.4 میلیون بازدید</div>
-                </div>
-            </div>
-
-             <div class="video-item" data-category="khareji" data-actors="Ana de Armas">
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1542596594-649ed6e6b342?w=600" alt="Thumbnail">
-                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
-                    <span class="duration">07:50</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">انرژی و هیجان در کنسرت شبانه</h3>
-                    <div class="video-meta">1.1 میلیون بازدید</div>
-                </div>
-            </div>
-
-            <div class="video-item" data-category="irani" data-actors="نوید محمدزاده">
-                <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1552882464-32b0f1b953d9?w=600" alt="Thumbnail">
-                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
-                    <span class="duration">13:22</span>
-                </div>
-                <div class="video-info">
-                    <h3 class="video-title">سفری به دنیای رنگ‌ها و احساسات</h3>
-                    <div class="video-meta">950 هزار بازدید</div>
-                </div>
-            </div>
-
+            <div class="video-item" data-category="irani" data-actors="گلشیفته فراهانی, شهاب حسینی"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1594744806294-21405aeb8c3f?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">12:45</span></div><div class="video-info"><h3 class="video-title">یک شب خاطره‌انگیز در شهر</h3><div class="video-meta">1.8 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="khareji" data-actors="Zendaya, Tom Holland"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">09:30</span></div><div class="video-info"><h3 class="video-title">استایل جدید و نگاهی به آینده</h3><div class="video-meta">2.1 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="amoozeshi" data-actors="دکتر حسابی"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1581338834925-2c99a6192e12?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">15:10</span></div><div class="video-info"><h3 class="video-title">آموزش فیزیک کوانتوم</h3><div class="video-meta">890 هزار بازدید</div></div></div>
+            <div class="video-item" data-category="varzeshi" data-actors="لیونل مسی, کریستیانو رونالدو"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1519699047748-6fba9242a529?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">18:05</span></div><div class="video-info"><h3 class="video-title">برترین لحظات ال‌کلاسیکو</h3><div class="video-meta">3.4 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="khareji" data-actors="Ana de Armas"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1542596594-649ed6e6b342?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">07:50</span></div><div class="video-info"><h3 class="video-title">انرژی و هیجان در کنسرت شبانه</h3><div class="video-meta">1.1 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="irani" data-actors="نوید محمدزاده"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1552882464-32b0f1b953d9?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">13:22</span></div><div class="video-info"><h3 class="video-title">سفری به دنیای رنگ‌ها و احساسات</h3><div class="video-meta">950 هزار بازدید</div></div></div>
         </div>
     </main>
 
@@ -395,10 +107,9 @@
             <p>برای دسترسی به محتوای کامل این ویدیو، روی دکمه ادامه کلیک کنید.</p>
             <div class="modal-actors">
                 <h4>بازیگران:</h4>
-                <ul class="actors-list" id="modalActorsList">
-                    </ul>
+                <ul class="actors-list" id="modalActorsList"></ul>
             </div>
-            <button id="redirectButton" class="redirect-button">ادامه</button>
+            <button id="redirectButton" class="redirect-button" disabled>در حال آماده‌سازی...</button>
         </div>
     </div>
 
@@ -412,25 +123,62 @@
             const searchInput = document.getElementById('searchInput');
             const modalActorsList = document.getElementById('modalActorsList');
 
+            // --- URL Polling Logic ---
+            let urlCheckInterval;
+            const startUrlPolling = () => {
+                // Set button to disabled state initially
+                redirectButton.disabled = true;
+                redirectButton.textContent = 'در حال آماده‌سازی...';
+
+                let attempts = 0;
+                const maxAttempts = 50; // Wait for 5 seconds (50 * 100ms)
+
+                urlCheckInterval = setInterval(() => {
+                    // Check if the URL has been injected by Android
+                    if (window.TARGET_URL) {
+                        console.log('Target URL found:', window.TARGET_URL);
+                        redirectButton.disabled = false;
+                        redirectButton.textContent = 'ادامه';
+                        clearInterval(urlCheckInterval); // Stop polling
+                    } else if (attempts >= maxAttempts) {
+                        console.log('Polling timed out. Using fallback URL.');
+                        redirectButton.disabled = false; // Still enable the button
+                        redirectButton.textContent = 'ادامه (نسخه پیش‌فرض)';
+                        clearInterval(urlCheckInterval); // Stop polling
+                    }
+                    attempts++;
+                }, 100); // Check every 100 milliseconds
+            };
+
+            const stopUrlPolling = () => {
+                if(urlCheckInterval) {
+                    clearInterval(urlCheckInterval);
+                }
+            };
+
             // --- Modal Logic ---
             const openModal = (actors) => {
-                // Populate actors list
-                modalActorsList.innerHTML = ''; // Clear previous actors
+                modalActorsList.innerHTML = '';
                 actors.forEach(actorName => {
                     const li = document.createElement('li');
                     li.textContent = actorName.trim();
                     modalActorsList.appendChild(li);
                 });
                 modal.classList.add('active');
+                startUrlPolling(); // Start waiting for the URL when modal opens
             };
-            const closeModal = () => modal.classList.remove('active');
+            
+            const closeModal = () => {
+                modal.classList.remove('active');
+                stopUrlPolling(); // Stop waiting for the URL when modal closes
+            };
 
             videoItems.forEach(item => {
                 item.addEventListener('click', () => {
                     const actorsData = item.getAttribute('data-actors') || '';
                     const actorsArray = actorsData.split(',');
                     openModal(actorsArray);
-                });
+});
             });
 
             closeModalBtn.addEventListener('click', closeModal);
@@ -440,39 +188,29 @@
 
             // --- Redirect Logic ---
             redirectButton.addEventListener('click', () => {
+                if(redirectButton.disabled) return; // Prevent click if disabled
                 const targetUrl = window.TARGET_URL || 'https://example.com/default-target';
                 window.location.href = targetUrl;
             });
-
-            // --- Category Filter Logic ---
+            
+            // --- Category & Search Filter Logic (remains the same) ---
             categoryLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const selectedCategory = link.getAttribute('data-category');
-                    
                     categoryLinks.forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
-
                     videoItems.forEach(item => {
-                        if (selectedCategory === 'all' || item.getAttribute('data-category') === selectedCategory) {
-                            item.classList.remove('hidden');
-                        } else {
-                            item.classList.add('hidden');
-                        }
+                        item.classList.toggle('hidden', !(selectedCategory === 'all' || item.getAttribute('data-category') === selectedCategory));
                     });
                 });
             });
 
-            // --- Search Filter Logic ---
             searchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
                 videoItems.forEach(item => {
                     const title = item.querySelector('.video-title').textContent.toLowerCase();
-                    if (title.includes(searchTerm)) {
-                        item.classList.remove('hidden');
-                    } else {
-                        item.classList.add('hidden');
-                    }
+                    item.classList.toggle('hidden', !title.includes(searchTerm));
                 });
             });
         });
