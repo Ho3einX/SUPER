@@ -1,148 +1,220 @@
+باشه، حتماً. این یک بازطراحی کامل از قالب قبلی است که تمام درخواست‌های شما را شامل می‌شود:
+
+  * **UI حرفه‌ای و کامل:** شامل هدر، زیرمنو، بخش پروفایل و جستجو.
+  * **اطلاعات فیلم:** برای هر آیتم، بخش "بازیگران" در نظر گرفته شده که در پنجره مودال نمایش داده می‌شود.
+  * **دسته بندی (Categories):** یک زیرمنو برای فیلتر کردن ویدیوها بر اساس دسته بندی وجود دارد.
+  * **کاملاً ریسپانسیو:** طراحی کاملاً برای موبایل بهینه شده و در نمایشگرهای بزرگتر نیز به زیبایی نمایش داده می‌شود.
+  * **عملکرد کلیک:** با کلیک روی هر ویدیو، به جای پخش، پنجره مودال با اطلاعات و دکمه "ادامه" باز می‌شود که به `target_url` شما ریدایرکت می‌کند.
+
+همه چیز در یک فایل واحد و مرتب نوشته شده است.
+
+-----
+
+### \#\# کد کامل قالب نهایی
+
+این کد را در یک فایل `premium_template.html` ذخیره کنید.
+
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PH Template V2</title>
+    <title>Premium Template</title>
     <style>
-        /* --- تعریف متغیرهای اصلی و فونت --- */
         :root {
             --ph-orange: #ff9000;
             --background-dark: #121212;
             --background-light: #1e1e1e;
             --text-primary: #ffffff;
-            --text-secondary: #aaaaaa;
-            --border-color: #333333;
+            --text-secondary: #b3b3b3;
+            --border-color: #282828;
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         
         body {
             font-family: 'Vazirmatn', sans-serif;
             background-color: var(--background-dark);
             color: var(--text-primary);
-            margin: 0;
-            padding: 0;
         }
 
-        /* --- هدر --- */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* --- Header --- */
         header {
-            background: linear-gradient(to bottom, #111, #000);
-            padding: 15px;
-            text-align: center;
-            border-bottom: 2px solid var(--ph-orange);
+            background-color: var(--background-light);
+            padding: 10px 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .logo {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
         }
         .logo .ph-orange-tag {
             background-color: var(--ph-orange);
             color: #000;
-            padding: 3px 9px;
+            padding: 2px 8px;
             border-radius: 7px;
-            margin-left: 6px;
-            font-size: 0.9em;
+            margin-left: 5px;
+        }
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 20px;
+            max-width: 500px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .profile-icon img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* --- Navigation / Categories --- */
+        nav {
+            background-color: var(--background-light);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .categories {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+        }
+        .categories li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+            display: block;
+        }
+        .categories li a:hover {
+            background-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        .categories li a.active {
+            background-color: var(--ph-orange);
+            color: #000;
         }
 
-        /* --- کانتینر اصلی --- */
+        /* --- Main Content --- */
         main {
-            padding: 15px;
+            padding: 20px 0;
         }
         .section-title {
-            font-size: 20px;
-            border-right: 4px solid var(--ph-orange);
-            padding-right: 12px;
+            font-size: 22px;
             margin-bottom: 20px;
         }
-
-        /* --- گرید ویدیوها (طراحی ریسپانسیو) --- */
         .video-grid {
             display: grid;
-            /* در موبایل ابتدا تک ستونه، در صفحات بزرگتر چند ستونه */
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+            gap: 20px;
         }
-
-        /* --- هر آیتم ویدیو --- */
         .video-item {
             background-color: var(--background-light);
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            flex-direction: column;
+        }
+        .video-item.hidden {
+            display: none;
         }
         .video-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
         }
-
-        /* --- تصویر بندانگشتی --- */
         .thumbnail {
             position: relative;
-            padding-top: 56.25%; /* نسبت تصویر 16:9 */
-            background-color: #333;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
         }
         .thumbnail img {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* تصویر کاملا فضا را پر می‌کند */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .thumbnail .play-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px; height: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .video-item:hover .play-icon {
+            opacity: 1;
+        }
+        .play-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
         }
         .thumbnail .duration {
             position: absolute;
-            bottom: 8px;
-            left: 8px;
+            bottom: 8px; right: 8px;
             background-color: rgba(0, 0, 0, 0.8);
             padding: 3px 7px;
             border-radius: 4px;
             font-size: 12px;
-            font-weight: 500;
         }
-        .thumbnail .hd-tag {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background-color: var(--ph-orange);
-            color: #000;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        /* --- اطلاعات ویدیو --- */
         .video-info {
             padding: 12px;
-            flex-grow: 1;
         }
         .video-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 500;
             margin: 0 0 8px 0;
-            line-height: 1.4;
         }
         .video-meta {
             font-size: 13px;
             color: var(--text-secondary);
         }
 
-        /* --- پنجره مودال (Modal) --- */
+        /* --- Modal --- */
         .modal {
             position: fixed;
             z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -157,24 +229,57 @@
         }
         .modal-content {
             background-color: #282828;
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
             width: 90%;
-            max-width: 450px;
+            max-width: 480px;
             text-align: center;
             transform: scale(0.9);
             transition: transform 0.3s ease;
-            border: 1px solid var(--border-color);
         }
         .modal.active .modal-content {
             transform: scale(1);
         }
-        .modal-content p {
-            font-size: 17px;
-            margin: 0 0 25px 0;
+        .close-button {
+            position: absolute;
+            top: 15px; left: 15px;
+            font-size: 28px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            line-height: 1;
         }
-
-        /* --- دکمه ریدایرکت --- */
+        .modal-content h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .modal-content p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+        .modal-actors {
+            margin-bottom: 25px;
+        }
+        .modal-actors h4 {
+            font-size: 14px;
+            color: var(--ph-orange);
+            margin-bottom: 10px;
+            text-align: right;
+        }
+        .actors-list {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .actors-list li {
+            color: var(--text-secondary);
+            font-size: 14px;
+            background: var(--border-color);
+            padding: 5px 12px;
+            border-radius: 15px;
+        }
         .redirect-button {
             background-color: var(--ph-orange);
             color: #000;
@@ -185,40 +290,63 @@
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.2s;
-        }
-        .redirect-button:hover {
-            background-color: #e68200;
         }
 
+        /* --- Media Queries for smaller screens --- */
+        @media (max-width: 600px) {
+            .search-bar {
+                display: none; /* Hide search bar on very small screens */
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Iran<span class="ph-orange-tag">Hub</span></div>
+        <div class="container header-content">
+            <div class="logo">Site<span class="ph-orange-tag">Hub</span></div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="جستجو در ویدیوها...">
+            </div>
+            <div class="profile-icon">
+                <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile">
+            </div>
+        </div>
     </header>
 
-    <main>
-        <h2 class="section-title">محبوب ترین ها ی اخیر</h2>
+    <nav>
+        <div class="container">
+            <ul class="categories">
+                <li><a href="#" class="active" data-category="all">همه</a></li>
+                <li><a href="#" data-category="irani">ایرانی</a></li>
+                <li><a href="#" data-category="khareji">خارجی</a></li>
+                <li><a href="#" data-category="amoozeshi">آموزشی</a></li>
+                <li><a href="#" data-category="varzeshi">ورزشی</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h2 class="section-title">پیشنهادهای ویژه</h2>
         <div class="video-grid">
-            <div class="video-item">
+            
+            <div class="video-item" data-category="irani" data-actors="گلشیفته فراهانی, شهاب حسینی">
                 <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1594744806294-21405aeb8c3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDA5MTF8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <img src="https://images.unsplash.com/photo-1594744806294-21405aeb8c3f?w=600" alt="Thumbnail">
+                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
                     <span class="duration">12:45</span>
-                    <span class="hd-tag">HD</span>
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">یک شب خاطره‌انگیز در شهر نئونی</h3>
+                    <h3 class="video-title">یک شب خاطره‌انگیز در شهر</h3>
                     <div class="video-meta">1.8 میلیون بازدید</div>
                 </div>
             </div>
             
-            <div class="video-item">
+            <div class="video-item" data-category="khareji" data-actors="Zendaya, Tom Holland">
                 <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDA5NDV8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600" alt="Thumbnail">
+                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
                     <span class="duration">09:30</span>
-                    <span class="hd-tag">HD</span>
                 </div>
                 <div class="video-info">
                     <h3 class="video-title">استایل جدید و نگاهی به آینده</h3>
@@ -226,32 +354,34 @@
                 </div>
             </div>
 
-            <div class="video-item">
+            <div class="video-item" data-category="amoozeshi" data-actors="دکتر حسابی">
                 <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1581338834925-2c99a6192e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDA5ODB8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <img src="https://images.unsplash.com/photo-1581338834925-2c99a6192e12?w=600" alt="Thumbnail">
+                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
                     <span class="duration">15:10</span>
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">ماجرایی در دل طبیعت بکر و دست‌نخورده</h3>
+                    <h3 class="video-title">آموزش فیزیک کوانتوم</h3>
                     <div class="video-meta">890 هزار بازدید</div>
                 </div>
             </div>
 
-            <div class="video-item">
+            <div class="video-item" data-category="varzeshi" data-actors="لیونل مسی, کریستیانو رونالدو">
                 <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1519699047748-6fba9242a529?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDEwMTF8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <img src="https://images.unsplash.com/photo-1519699047748-6fba9242a529?w=600" alt="Thumbnail">
+                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
                     <span class="duration">18:05</span>
-                    <span class="hd-tag">HD</span>
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">گفتگوی صمیمی زیر نور ماه</h3>
+                    <h3 class="video-title">برترین لحظات ال‌کلاسیکو</h3>
                     <div class="video-meta">3.4 میلیون بازدید</div>
                 </div>
             </div>
 
-             <div class="video-item">
+             <div class="video-item" data-category="khareji" data-actors="Ana de Armas">
                 <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1542596594-649ed6e6b342?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDEwNDF8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <img src="https://images.unsplash.com/photo-1542596594-649ed6e6b342?w=600" alt="Thumbnail">
+                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
                     <span class="duration">07:50</span>
                 </div>
                 <div class="video-info">
@@ -260,11 +390,11 @@
                 </div>
             </div>
 
-            <div class="video-item">
+            <div class="video-item" data-category="irani" data-actors="نوید محمدزاده">
                 <div class="thumbnail">
-                    <img src="https://images.unsplash.com/photo-1552882464-32b0f1b953d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjA3MDEzMTB8&ixlib=rb-4.0.3&q=80&w=1080" alt="Thumbnail">
+                    <img src="https://images.unsplash.com/photo-1552882464-32b0f1b953d9?w=600" alt="Thumbnail">
+                    <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div>
                     <span class="duration">13:22</span>
-                    <span class="hd-tag">HD</span>
                 </div>
                 <div class="video-info">
                     <h3 class="video-title">سفری به دنیای رنگ‌ها و احساسات</h3>
@@ -277,40 +407,94 @@
 
     <div id="actionModal" class="modal">
         <div class="modal-content">
-            <p>حالا ی پیام میزارم اینجا</p>
+            <span class="close-button">&times;</span>
+            <h3>دسترسی به محتوا</h3>
+            <p>برای دسترسی به محتوای کامل این ویدیو، روی دکمه ادامه کلیک کنید.</p>
+            <div class="modal-actors">
+                <h4>بازیگران:</h4>
+                <ul class="actors-list" id="modalActorsList">
+                    </ul>
+            </div>
             <button id="redirectButton" class="redirect-button">ادامه</button>
         </div>
     </div>
 
     <script>
-        const modal = document.getElementById('actionModal');
-        const redirectButton = document.getElementById('redirectButton');
-        const videoItems = document.querySelectorAll('.video-item');
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('actionModal');
+            const closeModalBtn = document.querySelector('.close-button');
+            const redirectButton = document.getElementById('redirectButton');
+            const videoItems = document.querySelectorAll('.video-item');
+            const categoryLinks = document.querySelectorAll('.categories a');
+            const searchInput = document.getElementById('searchInput');
+            const modalActorsList = document.getElementById('modalActorsList');
 
-        const openModal = () => modal.classList.add('active');
-        const closeModal = () => modal.classList.remove('active');
+            // --- Modal Logic ---
+            const openModal = (actors) => {
+                // Populate actors list
+                modalActorsList.innerHTML = ''; // Clear previous actors
+                actors.forEach(actorName => {
+                    const li = document.createElement('li');
+                    li.textContent = actorName.trim();
+                    modalActorsList.appendChild(li);
+                });
+                modal.classList.add('active');
+            };
+            const closeModal = () => modal.classList.remove('active');
 
-        // باز کردن مودال با کلیک روی هر ویدیو
-        videoItems.forEach(item => {
-            item.addEventListener('click', openModal);
+            videoItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const actorsData = item.getAttribute('data-actors') || '';
+                    const actorsArray = actorsData.split(',');
+                    openModal(actorsArray);
+                });
+            });
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) closeModal();
+            });
+
+            // --- Redirect Logic ---
+            redirectButton.addEventListener('click', () => {
+                const targetUrl = window.TARGET_URL || 'https://example.com/default-target';
+                window.location.href = targetUrl;
+            });
+
+            // --- Category Filter Logic ---
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const selectedCategory = link.getAttribute('data-category');
+                    
+                    categoryLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    videoItems.forEach(item => {
+                        if (selectedCategory === 'all' || item.getAttribute('data-category') === selectedCategory) {
+                            item.classList.remove('hidden');
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            // --- Search Filter Logic ---
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                videoItems.forEach(item => {
+                    const title = item.querySelector('.video-title').textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
         });
-
-        // بستن مودال با کلیک روی پس‌زمینه تیره
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-
-        // منطق دکمه ریدایرکت
-        redirectButton.addEventListener('click', () => {
-            // این متغیر از کد اندروید تزریق می‌شود
-            const targetUrl = window.TARGET_URL || 'https://example.com/default-target';
-            console.log('Redirecting to:', targetUrl);
-            window.location.href = targetUrl;
-        });
-
     </script>
 
 </body>
 </html>
+```
