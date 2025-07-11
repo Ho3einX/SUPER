@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Template (Fast)</title>
+    <title>Premium Template (Local)</title>
     <style>
         :root {
             --ph-orange: #ff9000;
@@ -55,8 +55,7 @@
         .modal-actors h4 { font-size: 14px; color: var(--ph-orange); margin-bottom: 10px; text-align: right; }
         .actors-list { list-style: none; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .actors-list li { color: var(--text-secondary); font-size: 14px; background: var(--border-color); padding: 5px 12px; border-radius: 15px; }
-        .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; transition: background-color 0.2s, opacity 0.2s; }
-        .redirect-button:disabled { background-color: #555; color: #888; cursor: not-allowed; opacity: 0.7; }
+        .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; }
         @media (max-width: 600px) { .search-bar { display: none; } }
     </style>
 </head>
@@ -69,7 +68,7 @@
                 <input type="text" id="searchInput" placeholder="جستجو در ویدیوها...">
             </div>
             <div class="profile-icon">
-                <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile">
+                <img src="./images/profile.jpg" alt="Profile">
             </div>
         </div>
     </header>
@@ -89,12 +88,12 @@
     <main class="container">
         <h2 class="section-title">پیشنهادهای ویژه</h2>
         <div class="video-grid">
-            <div class="video-item" data-category="irani" data-actors="گلشیفته فراهانی, شهاب حسینی"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1594744806294-21405aeb8c3f?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">12:45</span></div><div class="video-info"><h3 class="video-title">یک شب خاطره‌انگیز در شهر</h3><div class="video-meta">1.8 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="khareji" data-actors="Zendaya, Tom Holland"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">09:30</span></div><div class="video-info"><h3 class="video-title">استایل جدید و نگاهی به آینده</h3><div class="video-meta">2.1 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="amoozeshi" data-actors="دکتر حسابی"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1581338834925-2c99a6192e12?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">15:10</span></div><div class="video-info"><h3 class="video-title">آموزش فیزیک کوانتوم</h3><div class="video-meta">890 هزار بازدید</div></div></div>
-            <div class="video-item" data-category="varzeshi" data-actors="لیونل مسی, کریستیانو رونالدو"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1519699047748-6fba9242a529?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">18:05</span></div><div class="video-info"><h3 class="video-title">برترین لحظات ال‌کلاسیکو</h3><div class="video-meta">3.4 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="khareji" data-actors="Ana de Armas"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1542596594-649ed6e6b342?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">07:50</span></div><div class="video-info"><h3 class="video-title">انرژی و هیجان در کنسرت شبانه</h3><div class="video-meta">1.1 میلیون بازدید</div></div></div>
-            <div class="video-item" data-category="irani" data-actors="نوید محمدزاده"><div class="thumbnail"><img src="https://images.unsplash.com/photo-1552882464-32b0f1b953d9?w=600" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">13:22</span></div><div class="video-info"><h3 class="video-title">سفری به دنیای رنگ‌ها و احساسات</h3><div class="video-meta">950 هزار بازدید</div></div></div>
+            <div class="video-item" data-category="irani" data-actors="گلشیفته فراهانی, شهاب حسینی"><div class="thumbnail"><img src="./images/thumb1.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">12:45</span></div><div class="video-info"><h3 class="video-title">یک شب خاطره‌انگیز در شهر</h3><div class="video-meta">1.8 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="khareji" data-actors="Zendaya, Tom Holland"><div class="thumbnail"><img src="./images/thumb2.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">09:30</span></div><div class="video-info"><h3 class="video-title">استایل جدید و نگاهی به آینده</h3><div class="video-meta">2.1 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="amoozeshi" data-actors="دکتر حسابی"><div class="thumbnail"><img src="./images/thumb3.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">15:10</span></div><div class="video-info"><h3 class="video-title">آموزش فیزیک کوانتوم</h3><div class="video-meta">890 هزار بازدید</div></div></div>
+            <div class="video-item" data-category="varzeshi" data-actors="لیونل مسی, کریستیانو رونالدو"><div class="thumbnail"><img src="./images/thumb4.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">18:05</span></div><div class="video-info"><h3 class="video-title">برترین لحظات ال‌کلاسیکو</h3><div class="video-meta">3.4 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="khareji" data-actors="Ana de Armas"><div class="thumbnail"><img src="./images/thumb5.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">07:50</span></div><div class="video-info"><h3 class="video-title">انرژی و هیجان در کنسرت شبانه</h3><div class="video-meta">1.1 میلیون بازدید</div></div></div>
+            <div class="video-item" data-category="irani" data-actors="نوید محمدزاده"><div class="thumbnail"><img src="./images/thumb6.jpg" alt="Thumbnail"><div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg></div><span class="duration">13:22</span></div><div class="video-info"><h3 class="video-title">سفری به دنیای رنگ‌ها و احساسات</h3><div class="video-meta">950 هزار بازدید</div></div></div>
         </div>
     </main>
 
