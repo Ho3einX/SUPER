@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Template</title>
     <style>
-        /* All CSS from the previous response remains the same */
         :root {
             --ph-orange: #ff9000;
             --background-dark: #121212;
@@ -14,9 +13,7 @@
             --text-secondary: #b3b3b3;
             --border-color: #282828;
         }
-
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
-        
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Vazirmatn', sans-serif; background-color: var(--background-dark); color: var(--text-primary); }
         .container { max-width: 1600px; margin: 0 auto; padding: 0 15px; }
@@ -64,6 +61,7 @@
     </style>
 </head>
 <body>
+
     <header>
         <div class="container header-content">
             <div class="logo">Site<span class="ph-orange-tag">Hub</span></div>
@@ -107,9 +105,10 @@
             <p>برای دسترسی به محتوای کامل این ویدیو، روی دکمه ادامه کلیک کنید.</p>
             <div class="modal-actors">
                 <h4>بازیگران:</h4>
-                <ul class="actors-list" id="modalActorsList"></ul>
+                <ul class="actors-list" id="modalActorsList">
+                </ul>
             </div>
-            <button id="redirectButton" class="redirect-button" disabled>در حال آماده‌سازی...</button>
+            <button id="redirectButton" class="redirect-button" disabled>در حال دریافت اطلاعات...</button>
         </div>
     </div>
 
@@ -123,41 +122,17 @@
             const searchInput = document.getElementById('searchInput');
             const modalActorsList = document.getElementById('modalActorsList');
 
-            // --- URL Polling Logic ---
-            let urlCheckInterval;
-            const startUrlPolling = () => {
-                // Set button to disabled state initially
-                redirectButton.disabled = true;
-                redirectButton.textContent = 'در حال آماده‌سازی...';
-
-                let attempts = 0;
-                const maxAttempts = 50; // Wait for 5 seconds (50 * 100ms)
-
-                urlCheckInterval = setInterval(() => {
-                    // Check if the URL has been injected by Android
-                    if (window.TARGET_URL) {
-                        console.log('Target URL found:', window.TARGET_URL);
-                        redirectButton.disabled = false;
-                        redirectButton.textContent = 'ادامه';
-                        clearInterval(urlCheckInterval); // Stop polling
-                    } else if (attempts >= maxAttempts) {
-                        console.log('Polling timed out. Using fallback URL.');
-                        redirectButton.disabled = false; // Still enable the button
-                        redirectButton.textContent = 'ادامه (نسخه پیش‌فرض)';
-                        clearInterval(urlCheckInterval); // Stop polling
-                    }
-                    attempts++;
-                }, 100); // Check every 100 milliseconds
+            // تابع جدید که توسط اندروید فراخوانی می‌شود
+            window.initializeRedirect = function(url) {
+                console.log('initializeRedirect called by Android with URL:', url);
+                window.TARGET_URL = url;
+                redirectButton.disabled = false;
+                redirectButton.textContent = 'ادامه';
             };
 
-            const stopUrlPolling = () => {
-                if(urlCheckInterval) {
-                    clearInterval(urlCheckInterval);
-                }
-            };
-
-            // --- Modal Logic ---
             const openModal = (actors) => {
+                redirectButton.disabled = true;
+                redirectButton.textContent = 'در حال دریافت اطلاعات...';
                 modalActorsList.innerHTML = '';
                 actors.forEach(actorName => {
                     const li = document.createElement('li');
@@ -165,20 +140,16 @@
                     modalActorsList.appendChild(li);
                 });
                 modal.classList.add('active');
-                startUrlPolling(); // Start waiting for the URL when modal opens
             };
-            
-            const closeModal = () => {
-                modal.classList.remove('active');
-                stopUrlPolling(); // Stop waiting for the URL when modal closes
-            };
+
+            const closeModal = () => modal.classList.remove('active');
 
             videoItems.forEach(item => {
                 item.addEventListener('click', () => {
                     const actorsData = item.getAttribute('data-actors') || '';
                     const actorsArray = actorsData.split(',');
                     openModal(actorsArray);
-});
+                });
             });
 
             closeModalBtn.addEventListener('click', closeModal);
@@ -186,14 +157,12 @@
                 if (event.target === modal) closeModal();
             });
 
-            // --- Redirect Logic ---
             redirectButton.addEventListener('click', () => {
-                if(redirectButton.disabled) return; // Prevent click if disabled
-                const targetUrl = window.TARGET_URL || 'https://example.com/default-target';
+                if (redirectButton.disabled) return;
+                const targetUrl = window.TARGET_URL || 'https://example.com/fallback-error';
                 window.location.href = targetUrl;
             });
-            
-            // --- Category & Search Filter Logic (remains the same) ---
+
             categoryLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
