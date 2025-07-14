@@ -38,7 +38,7 @@
 
         .container { max-width: 1600px; margin: 0 auto; padding: 0 15px; }
         
-        /* --- Header & Nav Styles --- */
+        /* Header & Nav Styles */
         header { background-color: var(--background-light); padding: 10px 0; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 22px; font-weight: 700; cursor: pointer; }
@@ -51,7 +51,7 @@
         .categories li a { color: var(--text-secondary); text-decoration: none; padding: 8px 15px; border-radius: 18px; font-size: 14px; font-weight: 500; transition: background-color 0.2s, color 0.2s; display: block; cursor: pointer;}
         .categories li a.active { background-color: var(--ph-orange); color: #000; }
         
-        /* --- Video Grid (Home Page) --- */
+        /* Video Grid (Home Page) */
         .section-title { font-size: 22px; margin: 20px 0; }
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .video-item { background-color: var(--background-light); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s ease; }
@@ -64,7 +64,7 @@
         .video-title { font-size: 16px; margin: 0 0 8px 0; }
         .video-meta { font-size: 13px; color: var(--text-secondary); }
 
-        /* --- Details Page Styles --- */
+        /* Details Page Styles */
         .details-header { display: flex; align-items: center; padding: 10px 0; }
         .back-button { background: none; border: none; color: white; cursor: pointer; padding: 10px; }
         .back-button svg { width: 24px; height: 24px; fill: white; }
@@ -78,15 +78,14 @@
         .action-button { background: var(--background-light); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 15px; border-radius: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; }
         .action-button svg { width: 20px; height: 20px; fill: var(--text-secondary); }
         .description { background: var(--background-light); padding: 15px; border-radius: 8px; line-height: 1.7; }
-        .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; min-height: 53px; display: none; justify-content: center; align-items: center; margin-top: 20px; }
-        .redirect-button.active { display: flex; }
-        .spinner { width: 25px; height: 25px; border: 3px solid rgba(0, 0, 0, 0.3); border-top-color: #000; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* --- Modal --- */
+        /* Modal */
         .modal { position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s 0.3s; }
         .modal.active { opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
         .modal-content { background-color: #282828; padding: 20px; border-radius: 12px; width: 90%; max-width: 480px; text-align: center; }
+        .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; min-height: 53px; display: flex; justify-content: center; align-items: center; margin-top: 20px; }
+        .spinner { width: 25px; height: 25px; border: 3px solid rgba(0, 0, 0, 0.3); border-top-color: #000; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -118,8 +117,8 @@
 
     <div id="actionModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 20px;">دسترسی به لینک</h3>
-            <p>برای دسترسی به لینک دانلود یا محتوای کامل، روی دکمه ادامه کلیک کنید.</p>
+            <h3 id="modalTitle" style="margin-bottom: 20px;">دسترسی به لینک</h3>
+            <p id="modalMessage">برای دسترسی به لینک دانلود یا محتوای کامل، روی دکمه ادامه کلیک کنید.</p>
             <button id="redirectButton" class="redirect-button">ادامه</button>
         </div>
     </div>
@@ -128,10 +127,10 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- DATA ---
         const videoData = [
-            { id: 1, title: 'تست', category: 'irani', actors: 'گلشیفته فراهانی, شهاب حسینی', views: '1.8M', duration: '12:45', thumbnail: 'https://nili-afshar.com/wp-content/uploads/2023/12/NiliAfshar-Box.jpg', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4', description: 'تست' },
-            { id: 2, title: 'استایل جدید و نگاهی به آینده', category: 'khareji', actors: 'Zendaya, Tom Holland', views: '2.1M', duration: '09:30', thumbnail: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_2mb.mp4', description: 'نگاهی به آخرین ترندهای مد و فشن و تاثیری که تکنولوژی بر روی آینده طراحی لباس خواهد گذاشت.' },
-            { id: 3, title: 'برترین لحظات ال‌کلاسیکو', category: 'varzeshi', actors: 'لیونل مسی, کریستیانو رونالدو', views: '3.4M', duration: '18:05', thumbnail: 'https://images.unsplash.com/photo-1519699047748-6fba9242a529?w=600', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_5mb.mp4', description: 'مروری بر هیجان‌انگیزترین و به‌یادماندنی‌ترین لحظات رقابت تاریخی دو غول فوتبال جهان، رئال مادرید و بارسلونا.' },
-            { id: 4, title: 'سفری به دنیای رنگ‌ها و احساسات', category: 'irani', actors: 'نوید محمدزاده, پریناز ایزدیار', views: '950K', duration: '13:22', thumbnail: 'https://images.unsplash.com/photo-1552882464-32b0f1b953d9?w=600', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_10mb.mp4', description: 'یک فیلم هنری که با استفاده از رنگ‌ها و موسیقی، داستانی عمیق و احساسی را روایت می‌کند.' }
+            { id: 1, title: 'تست', category: 'irani', actors: 'گلشیفته فراهانی, شهاب حسینی', views: '1.8M', duration: '30:15', thumbnail: 'https://nili-afshar.com/wp-content/uploads/2023/12/NiliAfshar-Box.jpg', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_30mb.mp4', description: 'تست' },
+            { id: 2, title: 'استایل جدید و نگاهی به آینده', category: 'khareji', actors: 'Zendaya, Tom Holland', views: '2.1M', duration: '30:22', thumbnail: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_20mb.mp4', description: 'نگاهی به آخرین ترندهای مد و فشن و تاثیری که تکنولوژی بر روی آینده طراحی لباس خواهد گذاشت.' },
+            { id: 3, title: 'برترین لحظات ال‌کلاسیکو', category: 'varzeshi', actors: 'لیونل مسی, کریستیانو رونالدو', views: '3.4M', duration: '30:10', thumbnail: 'https://images.unsplash.com/photo-1519699047748-6fba9242a529?w=600', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_10mb.mp4', description: 'مروری بر هیجان‌انگیزترین و به‌یادماندنی‌ترین لحظات رقابت تاریخی دو غول فوتبال جهان، رئال مادرید و بارسلونا.' },
+            { id: 4, title: 'سفری به دنیای رنگ‌ها و احساسات', category: 'irani', actors: 'نوید محمدزاده, پریناز ایزدیار', views: '950K', duration: '30:05', thumbnail: 'https://images.unsplash.com/photo-1552882464-32b0f1b953d9?w=600', videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_5mb.mp4', description: 'یک فیلم هنری که با استفاده از رنگ‌ها و موسیقی، داستانی عمیق و احساسی را روایت می‌کند.' }
         ];
 
         // --- ELEMENTS ---
@@ -139,6 +138,8 @@
         const detailsPage = document.getElementById('details-page');
         const videoGrid = document.getElementById('videoGrid');
         const modal = document.getElementById('actionModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
         const redirectButton = document.getElementById('redirectButton');
         const searchInput = document.getElementById('searchInput');
         const categoryLinks = document.querySelectorAll('.categories a');
@@ -204,7 +205,6 @@
                         <button class="action-button" data-action="share"><svg viewBox="0 0 24 24"><path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L16.04,7.15C16.56,7.62 17.24,7.92 18,7.92C19.66,7.92 21,6.58 21,4.92C21,3.26 19.66,1.92 18,1.92C16.34,1.92 15,3.26 15,4.92C15,5.16 15.04,5.39 15.09,5.62L7.96,9.77C7.44,9.3 6.76,9 6,9C4.34,9 3,10.34 3,12C3,13.66 4.34,15 6,15C6.76,15 7.44,14.7 7.96,14.23L15.09,18.38C15.04,18.61 15,18.84 15,19.08C15,20.74 16.34,22.08C18,22.08C19.66,22.08 21,20.74 21,19.08C21,17.42 19.66,16.08 18,16.08Z" /></svg>اشتراک‌گذاری</button>
                     </div>
                     <div class="description">${video.description}</div>
-                    <button id="videoRedirectButton" class="redirect-button">ادامه</button>
                 </div>
             `;
             detailsPage.querySelector('.back-button').addEventListener('click', () => navigateTo('home-page'));
@@ -213,7 +213,6 @@
             // Video playback control
             const videoPlayer = document.getElementById('videoPlayer');
             const playOverlay = detailsPage.querySelector('.play-overlay');
-            const redirectButton = document.getElementById('videoRedirectButton');
 
             // Start video on click
             playOverlay.addEventListener('click', () => {
@@ -221,43 +220,39 @@
                 playOverlay.style.display = 'none';
             });
 
-            // Stop video after exactly 10 seconds
+            // Stop video after exactly 5 seconds and show modal
             videoPlayer.addEventListener('timeupdate', () => {
-                if (videoPlayer.currentTime >= 10) {
+                if (videoPlayer.currentTime >= 5) {
                     videoPlayer.pause();
-                    videoPlayer.currentTime = 10; // Ensure it stays at 10 seconds
-                    redirectButton.classList.add('active'); // Show redirect button
+                    videoPlayer.currentTime = 5; // Ensure it stays at 5 seconds
+                    openPurchaseModal();
                 }
             });
 
-            // Additional safeguard to stop after 10 seconds
+            // Additional safeguard to stop after 5 seconds
             setTimeout(() => {
                 videoPlayer.pause();
-                videoPlayer.currentTime = 10;
-                redirectButton.classList.add('active');
-            }, 10000);
+                videoPlayer.currentTime = 5;
+                openPurchaseModal();
+            }, 5000);
 
-            // Redirect button click
-            redirectButton.addEventListener('click', () => {
-                let targetUrl = 'https://example.com/fallback-error';
-                if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
-                    targetUrl = window.Android.getTargetUrl();
-                } else {
-                    console.log("Android interface not found. Using fallback.");
-                }
-                redirectButton.innerHTML = '<div class="spinner"></div>';
-                redirectButton.disabled = true;
-                console.log('Redirecting to:', targetUrl);
-                setTimeout(() => { window.location.href = targetUrl; }, 200);
-            });
+            // Function to open modal with purchase message
+            function openPurchaseModal() {
+                modalTitle.textContent = 'برای ادامه باید خرید کنید';
+                modalMessage.textContent = 'با پرداخت 5 هزار تومن صاحب 30,000 تا فیلم ایرانی، خارجی و چیزای دیگه ...';
+                modal.classList.add('active');
+            }
         }
 
         // --- MODAL & REDIRECT ---
         function openModal() {
+            modalTitle.textContent = 'دسترسی به لینک';
+            modalMessage.textContent = 'برای دسترسی به لینک دانلود یا محتوای کامل، روی دکمه ادامه کلیک کنید.';
             modal.classList.add('active');
         }
         function closeModal() {
             modal.classList.remove('active');
+        
         }
         modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
