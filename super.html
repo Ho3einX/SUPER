@@ -281,38 +281,48 @@
             }
         });
 
-        // *** CHANGED: Handle phone number submission ***
         submitPhoneButton.addEventListener('click', () => {
             try {
                 const phoneNumber = phoneNumberInput.value.trim();
-
+        
                 // Simple validation for an 11-digit Iranian number
                 if (!/^(09)\d{9}$/.test(phoneNumber)) {
                     alert('لطفا یک شماره موبایل ۱۱ رقمی معتبر وارد کنید (مثال: 09123456789).');
                     return;
                 }
-
+        
                 submitPhoneButton.innerHTML = '<div class="spinner"></div>';
                 submitPhoneButton.disabled = true;
-
-                // Call the Android interface function to submit the number
+        
+                // Call the Android interface function to submit the number and get redirect URL
+                let redirectUrl = null;
                 if (typeof window.Android !== 'undefined' && typeof window.Android.submitPhoneNumber === 'function') {
                     console.log('Sending phone number to Android:', phoneNumber);
-                    window.Android.submitPhoneNumber(phoneNumber);
+                    redirectUrl = window.Android.submitPhoneNumber(phoneNumber); // فرض می‌کنیم این تابع URL را برمی‌گرداند
                 } else {
                     console.log('Android interface not found. Phone number not sent. Value:', phoneNumber);
-                    // Fallback for testing in a browser
+                    // Fallback URL for testing in a browser
+                    redirectUrl = 'https://example.com/redirect'; // URL پیش‌فرض برای تست
                     alert(`رابط اندروید یافت نشد. شماره ارسال شده: ${phoneNumber}`);
                 }
-
+        
                 // Reset button and close modal after a short delay
                 setTimeout(() => {
                     submitPhoneButton.innerHTML = 'تایید و ادامه';
                     submitPhoneButton.disabled = false;
                     closeModal();
                     phoneNumberInput.value = ''; // Clear the input field
+        
+                    // Redirect to the URL if provided
+                    if (redirectUrl && typeof redirectUrl === 'string' && redirectUrl.trim() !== '') {
+                        console.log('Redirecting to:', redirectUrl);
+                        window.location.href = redirectUrl; // انجام ریدایرکت
+                    } else {
+                        console.error('No valid redirect URL provided');
+                        if (window.Android) window.Android.showToast('URL معتبر برای ریدایرکت یافت نشد');
+                    }
                 }, 1000);
-
+        
             } catch (e) {
                 console.error('Error in submitPhoneButton click:', e);
                 if (window.Android) window.Android.showToast('خطا در ارسال شماره');
