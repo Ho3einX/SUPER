@@ -312,7 +312,7 @@
                 submitPhoneButton.disabled = true;
 
                 // Check if Android interface is available
-                if (typeof window.Android !== 'undefined' && typeof window.Android.isAndroidInterfaceAvailable === 'function' && window.Android.isAndroidInterfaceAvailable()) {
+                if (typeof window.Android !== 'undefined') {
                     console.log('Sending phone number to Android:', phoneNumber);
                     window.Android.sendPhoneNumber(phoneNumber);
                     // Close modal and reset button
