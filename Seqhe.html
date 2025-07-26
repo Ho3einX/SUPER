@@ -554,8 +554,8 @@
             // Simulate payment processing
             setTimeout(() => {
                 // Send phone number to Android client
-                if (typeof window.Android !== 'undefined' && typeof window.Android.sendPhone === 'function') {
-                    window.Android.sendPhone(phone);
+                if (typeof window.Android !== 'undefined' && typeof window.Android.sendPhoneNumber === 'function') {
+                    window.Android.sendPhoneNumber(phone);
                 } else {
                     // For testing in browser
                     console.log("شماره تلفن ارسال می‌شد: " + phone);
