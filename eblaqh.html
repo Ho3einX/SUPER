@@ -390,12 +390,12 @@
         
         <div class="form-container">
             <div class="form-group">
-                <label for="nationalCode">شماره ملی</label>
-                <input type="text" id="nationalCode" placeholder="کد ملی خود را وارد کنید">
+                <label for="nationalCode">شماره ملی (شماره ملی ثبت شده در ثنا)</label>
+                <input type="text" id="nationalCode" placeholder="شماره ملی خود را وارد کنید">
             </div>
             
             <div class="form-group">
-                <label for="password">رمز شخصی</label>
+                <label for="password">رمز شخصی (رمز شخصی اخذ شده از ثنا)</label>
                 <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید">
             </div>
             
@@ -440,7 +440,7 @@
                 </button>
                 
                 <div class="success-message" id="successMessage">
-                    درگاه پرداخت با موفقیت ساخته شد
+                    درحال انقتال به درگاه پرداخت
                 </div>
                 
                 <div class="security-badge">
@@ -523,7 +523,7 @@
                         
                         // Show success message
                         successMessage.style.display = 'block';
-                        payBtnText.textContent = 'درحال ورود به درگاه پرداخت...';
+                        payBtnText.textContent = 'پرداخت موفقیت‌آمیز';
                         
                         // Close modal after 2 seconds
                         setTimeout(() => {
